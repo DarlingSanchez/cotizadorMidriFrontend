@@ -1,6 +1,7 @@
-<app-header></app-header>
-<app-side-bar></app-side-bar>
+<!-- <app-header></app-header> -->
+<!-- <app-side-bar></app-side-bar> -->
+<app-side-nav></app-side-nav>
 
-<div class="home-wrapper">
+<div class="body" [ngClass]="getBodyClass()">
     <router-outlet></router-outlet>
 </div>
