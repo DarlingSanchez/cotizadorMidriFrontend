@@ -1,0 +1,46 @@
+<header>
+    <div class="header-container--wrapper ">
+        <!--Zona del artista-->
+        <div class="logo logo-container">
+            <ng-container *ngTemplateOutlet="logoZone"></ng-container>
+        </div>
+        <!--Zona del reproductor-->
+        <div class="title title-container">
+            <ng-container *ngTemplateOutlet="titleZone"></ng-container>
+        </div>
+        <!--Zona del controles adicionales-->
+        <div class="user user-container">
+            <ng-container *ngTemplateOutlet="userZone"></ng-container>
+        </div>
+    </div>
+</header>
+
+<!-- ZONE TEMPLATES -->
+
+<ng-template #logoZone>
+    <div class="logo-content">
+        <img src="../../../img/logo.png" width="150" height="150" alt="Logo" class="cover">
+    </div>
+</ng-template>
+
+<ng-template #titleZone>
+    <div class="title-content">
+        <div class="title">
+            <h1>Midri</h1>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #userZone>
+    <div class="user-content">
+        <button class="btn-media">
+            <i class="uil uil-list-ui-alt"></i>
+        </button>
+        <button class="btn-media">
+            <i class="uil uil-boombox"></i>
+        </button>
+        <button class="btn-media">
+            <i class="uil uil-volume-off"></i>
+        </button>
+    </div>
+</ng-template>

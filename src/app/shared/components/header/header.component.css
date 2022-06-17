@@ -1,0 +1,31 @@
+.header {
+    background-color: var(--color-5);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 2;
+    height: 100px;
+    border-top: solid 1px var(--color-2);
+    box-shadow: 0px -15px 15px 7px #0000002e;
+}
+
+.header-container--wrapper {
+    position: relative;
+    display: grid;
+    grid-template-columns: 25% 50% 25%;
+    height: 100%;
+    padding: 0;
+}
+
+.logo-container,
+.title-container,
+.user-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo-content,
+.title-content,
+.user-content {
+    margin: 0 auto;
+}
