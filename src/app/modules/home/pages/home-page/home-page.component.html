@@ -1,7 +1,7 @@
 <!-- <app-header></app-header> -->
 <!-- <app-side-bar></app-side-bar> -->
-<app-side-nav></app-side-nav>
+<app-side-nav (onToggleSideNav)="onToggleSideNav($event)"></app-side-nav>
 
-<div class="body" [ngClass]="getBodyClass()">
+<div class="body body-trimmed" [ngClass]="getBodyClass()">
     <router-outlet></router-outlet>
 </div>

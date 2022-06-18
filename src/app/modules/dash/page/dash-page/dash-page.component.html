@@ -1,3 +1,35 @@
 <div class="container">
+    <div class="header">
+        <div class="header-title">
+            <h1>Midri Dashboard</h1>
+            <span>Datos</span>
+        </div>
+        <div class="header-fecha">
+            <span>16-6-2022</span>
+            <span>11:35 pm</span>
+        </div>
+    </div>
 
+    <div class="content">
+        <div *ngFor="let data of navData; index as i" class="button-content">
+            <button [routerLink]="data.router">{{data.name}}
+                <i [class]="data.icon"></i>
+            </button>
+        </div>
+        <!-- <div class="button-content btn2">
+            <button [routerLink]="'/productos'">Productos
+                <i class="fa-box-open fal"></i>
+            </button>
+        </div>
+        <div class="button-content btn3">
+            <button [routerLink]="'/crear-cotizacion'">Crear Cotización
+                <i class="fa fa-file"></i>
+            </button>
+        </div>
+        <div class="button-content btn4">
+            <button [routerLink]="'/ver-cotizaciones'">Ver Cotizaciones
+                <i class="fa fa-th"></i>
+            </button>
+        </div> -->
+    </div>
 </div>

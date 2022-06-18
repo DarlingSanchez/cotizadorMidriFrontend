@@ -1,3 +1,83 @@
-.container {
-    margin: 50px;
+.header {
+    display: flex;
+    align-content: space-between;
+}
+
+.header div {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+}
+
+.header-fecha {
+    align-items: end;
+}
+
+.content {
+    padding-top: 50px;
+    align-content: space-between;
+    display: grid;
+    /*grid-template-columns: repeat(4, 1fr);*/
+    grid-template-columns: repeat(auto-fill, 290px);
+    gap: 26px;
+    place-content: center;
+    width: 90%;
+    margin: 0 auto;
+}
+
+.button-content {
+    width: 100%;
+    padding-left: 10px;
+}
+
+.button-content:nth-child(1) {
+    display: none;
+}
+
+.button-content button {
+    width: 100%;
+    height: 120px;
+    border: none;
+    background: white;
+    box-shadow: rgb(0 0 0 / 9%) 0px 3px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.button-content button i {
+    padding-left: 10px;
+}
+
+.button-content:nth-child(2) button {
+    border-left: 3px solid black;
+}
+
+.button-content:nth-child(2) button i {
+    color: black;
+}
+
+.button-content:nth-child(3) button {
+    border-left: 3px solid #2E63E2;
+}
+
+.button-content:nth-child(3) button i {
+    color: #2E63E2;
+}
+
+.button-content:nth-child(4) button {
+    border-left: 3px solid #E80C72;
+}
+
+.button-content:nth-child(4) button i {
+    color: #E80C72;
+}
+
+.button-content:nth-child(5) button {
+    border-left: 3px solid #7044BA;
+}
+
+.button-content:nth-child(5) button i {
+    color: #7044BA;
 }
