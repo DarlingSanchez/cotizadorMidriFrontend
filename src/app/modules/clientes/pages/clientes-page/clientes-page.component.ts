@@ -1,6 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit  } from '@angular/core';
 import { dataClientes } from '../../../../data/clientes';
 import { ClientesModels } from '../../../../core/models/clientes.model';
+
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
 
 
 
@@ -9,15 +13,33 @@ import { ClientesModels } from '../../../../core/models/clientes.model';
   templateUrl: './clientes-page.component.html',
   styleUrls: ['./clientes-page.component.css']
 })
-export class ClientesPageComponent implements OnInit {
-  clientes: ClientesModels[] =[]
+export class ClientesPageComponent implements  AfterViewInit {
+  //clientes: ClientesModels[] =[]
 
-  displayedColumns: string[] = ['logo','nombre', 'ubicacion', 'representante','correo','editar'];
+  displayedColumns: string[] = ['logo','id','nombre', 'ubicacion', 'representante','editar'];
+  clientes: MatTableDataSource<ClientesModels>;
 
-  constructor() { }
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  constructor() { 
+    this.clientes = new MatTableDataSource(dataClientes);
+  }
 
   ngOnInit(): void {
-    this.clientes = dataClientes;
+   
+  }
+  ngAfterViewInit() {
+    this.clientes.paginator = this.paginator;
+    this.clientes.sort = this.sort;
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.clientes.filter = filterValue.trim().toLowerCase();
+
+    if (this.clientes.paginator) {
+      this.clientes.paginator.firstPage();
+    }
   }
 
 }

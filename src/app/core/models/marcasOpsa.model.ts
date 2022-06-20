@@ -1,5 +1,6 @@
 export interface MarcasOpsaModels {
     id:number;
-    nombreEmpresa: string;
-    logo:string
+    nombreMarca: string;
+    logo:string,
+    active:boolean
 }

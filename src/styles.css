@@ -1,6 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
+:root {
+    --color-1: #2E63E2;
+    --color-2: #E80C72;
+    --color-3: #7044BA;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -31,5 +37,49 @@ body {
 .card .card-body {
     padding: 1rem 1.5rem;
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.button {
+    border: none;
+    color: white;
+    padding: 10px 22px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.btn-primero {
+    background-color: var(--color-1);
+}
+
+.btn-segundo {
+    background-color: var(--color-2);
+}
+
+.btn-tercero {
+    background-color: var(--color-3);
+    color: white;
+}
+
+.input-custom {
+    box-shadow: rgb(0 0 0 / 8%) 0px 4px 12px;
+    height: 30px;
+    border: 1px solid #00000063;
+    border-radius: 10px;
+    margin-top: 5px;
+    margin-bottom: 30px;
+    padding: 0 5px;
+}

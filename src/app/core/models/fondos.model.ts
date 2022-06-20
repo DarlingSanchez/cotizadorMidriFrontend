@@ -1,5 +1,6 @@
 export interface FondosModels {
     id:number;
     nombreFondo: string;
-    background:string
+    background:string,
+    active:boolean
 }

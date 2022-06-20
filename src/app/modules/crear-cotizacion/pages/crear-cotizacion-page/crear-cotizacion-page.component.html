@@ -1,1 +1,206 @@
-<p>crear-cotizacion-page works!</p>
+<h1>Crea una cotización</h1>
+
+
+
+
+<mat-stepper>
+    <mat-step label="Cliente y plantilla" state="phone">
+        <div class="content-cliente-plantilla">
+            <div class="cliente">
+                <h4>Seleccione un cliente</h4>
+                <select id="listClientes">
+                <option value="" *ngFor="let dato of clientes">
+                   {{dato.nombreEmpresa}}
+               </option>
+              </select>
+            </div>
+            <div class="plantilla">
+                <h4>Seleccione una plantilla</h4>
+                <mat-button-toggle-group name="fontStyle" aria-label="Font Style" class="botones-fondos">
+                    <mat-button-toggle [value]="data.id" *ngFor="let data of plantilla" [checked]="data.active">
+                        <img class="img-fondo" src="{{data.background}}" alt="{{data.nombreFondo}}">
+                    </mat-button-toggle>
+                </mat-button-toggle-group>
+            </div>
+        </div>
+
+        <div class="content-button">
+            <button class="button btn-segundo" mat-button matStepperNext>Siguiente</button>
+        </div>
+    </mat-step>
+
+    <mat-step label="Marcas y descuentos" state="chat">
+        <div class="content-cliente-plantilla">
+            <div class="cliente">
+                <!-- <h4>Seleccione un cliente</h4>
+                <select id="listClientes">
+                <option value="" *ngFor="let dato of clientes">
+                   {{dato.nombreEmpresa}}
+               </option>
+              </select> -->
+                <div class="audiencias">
+                    <h4 style="margin-top: 20px">Seleccione audiencias de interés</h4>
+                    <section>
+                        <label class="container">General
+                            <input type="checkbox" checked="checked">
+                            <span class="checkmark"></span>
+                          </label>
+                        <label class="container">Honduras
+                            <input type="checkbox">
+                            <span class="checkmark"></span>
+                          </label>
+                        <label class="container">Estados Unidos
+                            <input type="checkbox">
+                            <span class="checkmark"></span>
+                          </label>
+                        <label class="container">Resto del mundo
+                            <input type="checkbox">
+                            <span class="checkmark"></span>
+                          </label>
+                    </section>
+                </div>
+            </div>
+
+            <div class="plantilla">
+                <h4>Seleccione una plantilla</h4>
+                <mat-button-toggle-group name="fontStyle" aria-label="Font Style" class="botones-fondos">
+                    <mat-button-toggle [value]="data.id" *ngFor="let data of marcas" [checked]="data.active">
+                        <img class="img-logo" src="{{data.logo}}" alt="{{data.nombreMarca}}">
+                    </mat-button-toggle>
+                </mat-button-toggle-group>
+            </div>
+        </div>
+        <div class="content-button">
+            <button class="button btn-segundo" mat-button matStepperPrevious>Anterior</button>
+            <button class="button btn-segundo" mat-button matStepperNext>Siguiente</button>
+        </div>
+    </mat-step>
+
+    <mat-step label="Productos y entregable">
+        <div class="content-productos-entregable">
+            <div class="categorias">
+                <h4>Seleccione una categoría</h4>
+                <mat-button-toggle-group #group="matButtonToggleGroup" name="fontStyle" aria-label="Font Style" class="botones-fondos">
+                    <mat-button-toggle value="awareness" checked="true">
+                        <img class="img-categoria" src="https://ezalli.com/recursos/img/iconos/awareness.png" alt="awareness">
+                        <br><span>Awareness</span>
+                    </mat-button-toggle>
+                    <mat-button-toggle value="engagement">
+                        <img class="img-categoria" src="https://ezalli.com/recursos/img/iconos/engagement.png" alt="engagement">
+                        <br><span>Engagement</span>
+                    </mat-button-toggle>
+                    <mat-button-toggle value="conversion">
+                        <img class="img-categoria" src="https://ezalli.com/recursos/img/iconos/conversion.png" alt="conversion">
+                        <br><span>Conversión</span>
+                    </mat-button-toggle>
+                </mat-button-toggle-group>
+
+            </div>
+            <div class="productos">
+
+                <h4>Seleccione los productos</h4>
+                <ng-container *ngTemplateOutlet="awareness"></ng-container>
+                <ng-container *ngTemplateOutlet="engagement"></ng-container>
+                <ng-container *ngTemplateOutlet="conversion"></ng-container>
+
+            </div>
+        </div>
+        <div class="content-button">
+            <button class="button btn-segundo" mat-button matStepperPrevious>Anterior</button>
+            <!-- <button class="button btn-segundo" mat-button (click)="stepper.reset()">Limpiar</button> -->
+            <button class="button btn-segundo" mat-button (click)="crearPptx()">Generar</button>
+        </div>
+    </mat-step>
+
+    <!-- Icon overrides. -->
+    <!-- <ng-template matStepperIcon="phone">
+      <mat-icon>call_end</mat-icon>
+    </ng-template>
+    <ng-template matStepperIcon="chat">
+      <mat-icon>forum</mat-icon>
+    </ng-template> -->
+</mat-stepper>
+
+<ng-template #awareness>
+    <mat-accordion class="category" [ngClass]="group.value" *ngIf="group.value=='awareness'">
+        <ng-container *ngTemplateOutlet="objetivosGenerales"></ng-container>
+        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Display
+                </mat-panel-title>
+                <mat-panel-description>
+                    Estado: {{panelOpenState ? 'open' : 'closed'}}
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <p>Aquí los productos de Awareness</p>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Rich Media
+                </mat-panel-title>
+                <mat-panel-description>
+                    Estado: {{panelOpenState ? 'open' : 'closed'}}
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <p>Aquí los productos de Awareness2</p>
+        </mat-expansion-panel>
+
+    </mat-accordion>
+</ng-template>
+<ng-template #engagement>
+    <mat-accordion class="category" [ngClass]="group.value" *ngIf="group.value=='engagement'">
+        <ng-container *ngTemplateOutlet="objetivosGenerales"></ng-container>
+        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Productos de Engagement
+                </mat-panel-title>
+                <mat-panel-description>
+                    Estado: {{panelOpenState ? 'open' : 'closed'}}
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <p>Aqui los productos de Engagement</p>
+        </mat-expansion-panel>
+    </mat-accordion>
+</ng-template>
+<ng-template #conversion>
+    <mat-accordion class="category" [ngClass]="group.value" *ngIf="group.value=='conversion'">
+        <ng-container *ngTemplateOutlet="objetivosGenerales"></ng-container>
+        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Productos de Conversión
+                </mat-panel-title>
+                <mat-panel-description>
+                    Estado: {{panelOpenState ? 'open' : 'closed'}}
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <p>Aqui los productos de Conversión</p>
+        </mat-expansion-panel>
+    </mat-accordion>
+</ng-template>
+
+
+<ng-template #objetivosGenerales>
+    <mat-expansion-panel hideToggle>
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Objetivo Específico
+            </mat-panel-title>
+            <mat-panel-description>
+                Click para ver los objetivos específicos
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-radio-group aria-label="Select an option" class="objetivos-radio-group">
+            <mat-radio-button class="objetivos-radio-button" [value]="data.id" *ngFor="let data of objetivos" [checked]="data.active">
+                {{data.nombreObjetivo}}
+            </mat-radio-button>
+            <mat-radio-button class="objetivos-radio-button" value="5">
+                <input class="input-custom" type="text" name="" id="">
+            </mat-radio-button>
+        </mat-radio-group>
+    </mat-expansion-panel>
+</ng-template>
