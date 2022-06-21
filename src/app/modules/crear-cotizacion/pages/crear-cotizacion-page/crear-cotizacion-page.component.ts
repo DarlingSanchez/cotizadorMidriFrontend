@@ -46,6 +46,7 @@ export class CrearCotizacionPageComponent implements OnInit{
   // 1. Create a new Presentation
   pres = new pptxgen();
 
+
   slide:any;
   constructor() { 
     
@@ -64,12 +65,15 @@ export class CrearCotizacionPageComponent implements OnInit{
 
     // 2. Add a Slide
     this.slide = this.pres.addSlide();
-    this.slide.background = { path: "../../../../img/fondos/template_1.jpg" };
+    
+
+    this.slide.background = { path: "../../../../../assets/fondos/template_1.jpg" };
+   
     // 3. Add one or more objects (Tables, Shapes, Images, Text and Media) to the Slide
-    let textboxText = "Hello World from PptxGenJS!";
-    let textboxOpts = { x: 1, y: 1, color: "363636" };
+    let textboxText = "Cotización Midri";
+    let textboxOpts = { x: .5, y: .5, color: "000000" };
     this.slide.addText(textboxText, textboxOpts);
-    this.slide.addImage({ path: "../../../../img/logo.png", x: 2, y: 2 });
+    this.slide.addImage({ path: "../../../../../assets/img/logo.png", x: 2, y: 2 });
     
     this.pres.writeFile({ fileName: 'Browser-PowerPoint-Demo.pptx',  });
   }

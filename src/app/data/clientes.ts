@@ -8,7 +8,7 @@ export const dataClientes = [
         telefono:"9653622",
         especialista:"Especialista de Diunsa",
         categoria:"categoria Diunsa",
-        logo:"../img/logo.png"
+        logo:"../../assets/img/logo.png"
     },
     {
         id:2,
@@ -19,7 +19,7 @@ export const dataClientes = [
         telefono:"9653622",
         especialista:"Especialista de Azteca",
         categoria:"categoria Azteca",
-        logo:"../img/logo.png"
+        logo:"../../assets/img/logo.png"
     },
     {
         id:3,
@@ -30,7 +30,7 @@ export const dataClientes = [
         telefono:"9653622",
         especialista:"Especialista de La Mundial",
         categoria:"categoria La Mundial",
-        logo:"../img/logo.png"
+        logo:"../../assets/img/logo.png"
     },
     {
         id:4,
@@ -41,7 +41,7 @@ export const dataClientes = [
         telefono:"9653622",
         especialista:"Especialista de Intur",
         categoria:"categoria Intur",
-        logo:"../img/logo.png"
+        logo:"../../assets/img/logo.png"
     },
     
 ]
