@@ -1,5 +1,7 @@
 export interface MediaMixModels {
-    idCategoria:number;
+    id:number,
+    idMediaMix:string;
+    ngmodel:string;
     nombreMediaMix:string;
     tarifa:number;
 }

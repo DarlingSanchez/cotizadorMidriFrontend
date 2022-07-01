@@ -1,7 +1,7 @@
 <h1>Crea una cotización</h1>
 
-<mat-stepper>
-    <mat-step label="Cliente y plantilla" state="phone">
+<mat-stepper (selectionChange)="cambioPasos()">
+    <mat-step label="Cliente y marca" state="phone">
         <div class="content-cliente-plantilla">
             <div class="cliente">
                 <h4>Seleccione un cliente</h4>
@@ -12,12 +12,14 @@
               </select>
             </div>
             <div class="plantilla">
-                <h4>Seleccione una plantilla</h4>
-                <mat-button-toggle-group name="fontStyle" aria-label="Font Style" class="botones-fondos">
-                    <mat-button-toggle [value]="data.id" *ngFor="let data of plantilla" [checked]="data.active">
-                        <img class="img-fondo" src="{{data.background}}" alt="{{data.nombreFondo}}">
+                <h4>Seleccione una marca</h4>
+                <mat-button-toggle-group name="fontStyle" aria-label="Font Style" class="botones-fondos" (change)="definirFondos($event)">
+                    <mat-button-toggle [value]="data.id" id="marca-{{data.id}}" *ngFor="let data of marcas" [checked]="data.active" [ngClass]="{'marca-visible marca':data.id==0,'marca-no-visible marca':data.id>0}">
+                        <img class="img-logo" src="{{data.logo}}" alt="{{data.nombreMarca}}">
                     </mat-button-toggle>
+                    <button (click)="verMarcas()" class="button btn-tercero ver-marcas">{{captionButtonVerMarcas}}</button>
                 </mat-button-toggle-group>
+
             </div>
         </div>
 
@@ -26,17 +28,19 @@
         </div>
     </mat-step>
 
-    <mat-step label="Marcas y descuentos" state="chat">
-        <div class="content-cliente-plantilla">
-            <div class="cliente">
+    <mat-step label="Plantilla y Objetivos" state="chat">
+        <div class="content-cliente-plantillas">
+            <div style="padding: 20px 0;" class="objetivos">
                 <!-- <h4>Seleccione un cliente</h4>
                 <select id="listClientes">
                 <option value="" *ngFor="let dato of clientes">
                    {{dato.nombreEmpresa}}
                </option>
               </select> -->
-                <div class="audiencias">
-                    <h4 style="margin-top: 20px">Seleccione audiencias de interés</h4>
+                <h4>Seleccione los objetivos</h4>
+                <ng-container *ngTemplateOutlet="objetivosGenerales"></ng-container>
+                <div class="audiencias audiencias-disabled">
+
                     <section>
                         <label class="container">General
                             <input type="checkbox" checked="checked">
@@ -47,7 +51,7 @@
                             <span class="checkmark"></span>
                           </label>
                         <label class="container">Estados Unidos
-                            <input type="checkbox">
+                            <input type="checkbox" id="eua">
                             <span class="checkmark"></span>
                           </label>
                         <label class="container">Resto del mundo
@@ -58,11 +62,11 @@
                 </div>
             </div>
 
-            <div class="plantilla">
+            <div style="padding: 20px 0;" class="plantillas">
                 <h4>Seleccione una plantilla</h4>
                 <mat-button-toggle-group name="fontStyle" aria-label="Font Style" class="botones-fondos">
-                    <mat-button-toggle [value]="data.id" *ngFor="let data of marcas" [checked]="data.active">
-                        <img class="img-logo" src="{{data.logo}}" alt="{{data.nombreMarca}}">
+                    <mat-button-toggle [value]="data.id" *ngFor="let data of fondos" [checked]="data.active">
+                        <img class="img-fondo" src="{{data.background}}" alt="{{data.nombreFondo}}">
                     </mat-button-toggle>
                 </mat-button-toggle-group>
             </div>
@@ -73,22 +77,22 @@
         </div>
     </mat-step>
 
-    <mat-step label="Productos y entregable">
+    <mat-step label="Seleccionar Clusters">
         <div class="content-productos-entregable">
             <div class="categorias">
                 <h4>Seleccione una categoría</h4>
-                <mat-button-toggle-group #group="matButtonToggleGroup" name="fontStyle" aria-label="Font Style" class="botones-fondos">
-                    <mat-button-toggle value="awareness" checked="true">
-                        <img class="img-categoria" src="https://ezalli.com/recursos/img/iconos/awareness.png" alt="awareness">
+                <mat-button-toggle-group #group="matButtonToggleGroup" (change)="filtrarDatos($event)" name="fontStyle" aria-label="Font Style" class="botones-fondos" multiple>
+                    <mat-button-toggle value="AWARENESS" checked="true">
+                        <img class="img-categoria" src="../../../../../assets/img/awareness.png" alt="awareness">
                         <br><span>Awareness</span>
                     </mat-button-toggle>
-                    <mat-button-toggle value="engagement">
-                        <img class="img-categoria" src="https://ezalli.com/recursos/img/iconos/engagement.png" alt="engagement">
-                        <br><span>Engagement</span>
+                    <mat-button-toggle value="INTERES">
+                        <img class="img-categoria" src="../../../../../assets/img/interes.png" alt="interes">
+                        <br><span>Interés</span>
                     </mat-button-toggle>
-                    <mat-button-toggle value="conversion">
-                        <img class="img-categoria" src="https://ezalli.com/recursos/img/iconos/conversion.png" alt="conversion">
-                        <br><span>Conversión</span>
+                    <mat-button-toggle value="INTENCION">
+                        <img class="img-categoria" src="../../../../../assets/img/intencion.png" alt="intención">
+                        <br><span>Intención</span>
                     </mat-button-toggle>
                 </mat-button-toggle-group>
 
@@ -96,12 +100,33 @@
             <div class="productos">
 
                 <h4>Seleccione los productos</h4>
-                <ng-container *ngTemplateOutlet="awareness"></ng-container>
-                <ng-container *ngTemplateOutlet="engagement"></ng-container>
-                <ng-container *ngTemplateOutlet="conversion"></ng-container>
+                <ng-container *ngTemplateOutlet="tablaClusters"></ng-container>
 
             </div>
         </div>
+        <div class="content-button">
+            <button class="button btn-segundo" mat-button matStepperPrevious>Anterior</button>
+            <button class="button btn-segundo" mat-button matStepperNext>Siguiente</button>
+        </div>
+    </mat-step>
+
+
+    <mat-step label="Media mix y pptx">
+        <div class="container-media-mix">
+            <div class="content-media-mix" *ngIf="activeMediaMixAwareness">
+                <h4>Awareness</h4>
+                <ng-container *ngTemplateOutlet="tablaMediaMixAwareness"></ng-container>
+            </div>
+            <div class="content-media-mix" *ngIf="activeMediaMixInteres">
+                <h4>Interés</h4>
+                <ng-container *ngTemplateOutlet="tablaMediaMixInteres"></ng-container>
+            </div>
+            <div class="content-media-mix" *ngIf="activeMediaMixIntencion">
+                <h4>Intención</h4>
+                <ng-container *ngTemplateOutlet="tablaMediaMixIntencion"></ng-container>
+            </div>
+        </div>
+
         <div class="content-button">
             <button class="button btn-segundo" mat-button matStepperPrevious>Anterior</button>
             <!-- <button class="button btn-segundo" mat-button (click)="stepper.reset()">Limpiar</button> -->
@@ -109,76 +134,71 @@
         </div>
     </mat-step>
 
-    <!-- Icon overrides. -->
-    <!-- <ng-template matStepperIcon="phone">
-      <mat-icon>call_end</mat-icon>
-    </ng-template>
-    <ng-template matStepperIcon="chat">
-      <mat-icon>forum</mat-icon>
-    </ng-template> -->
 </mat-stepper>
 
-<ng-template #awareness>
-    <mat-accordion class="category" [ngClass]="group.value" *ngIf="group.value=='awareness'">
-        <ng-container *ngTemplateOutlet="objetivosGenerales"></ng-container>
-        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    Display
-                </mat-panel-title>
-                <mat-panel-description>
-                    Estado: {{panelOpenState ? 'open' : 'closed'}}
-                </mat-panel-description>
-            </mat-expansion-panel-header>
-            <p>Aquí los productos de Awareness</p>
-        </mat-expansion-panel>
+<!-- TABLA DE CLUSTERS -->
+<ng-template #tablaClusters>
+    <mat-form-field appearance="standard">
 
-        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    Rich Media
-                </mat-panel-title>
-                <mat-panel-description>
-                    Estado: {{panelOpenState ? 'open' : 'closed'}}
-                </mat-panel-description>
-            </mat-expansion-panel-header>
-            <p>Aquí los productos de Awareness2</p>
-        </mat-expansion-panel>
+        <label for="">Filtrar</label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Términos de búsqueda" #input>
+    </mat-form-field>
+    <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="clusters" matSort>
 
-    </mat-accordion>
+            <!-- Position Column -->
+            <ng-container matColumnDef="check">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element">
+                    <div class="form-check">
+                        <input name="checkboxClusters" type="checkbox" [id]="element.codigoCluster" class="checkbox{{element.tipoCluster}}">
+                    </div>
+                </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="codigo">
+                <th mat-header-cell *matHeaderCellDef>Código</th>
+                <td mat-cell *matCellDef="let element">{{element.codigoCluster}}</td>
+            </ng-container>
+
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="tipoCluster">
+                <th mat-header-cell *matHeaderCellDef>Tipo Cluster</th>
+                <td mat-cell *matCellDef="let element">{{element.tipoCluster}}</td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef> Nombre Cluster </th>
+                <td mat-cell *matCellDef="let element"> {{element.nombreCluster}} </td>
+            </ng-container>
+
+            <!-- Weight Column -->
+            <ng-container matColumnDef="nivel">
+                <th mat-header-cell *matHeaderCellDef> Nivel Cluster </th>
+                <td mat-cell *matCellDef="let element"> {{element.nivel}} </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="region">
+                <th mat-header-cell *matHeaderCellDef> Región </th>
+                <td mat-cell *matCellDef="let element"> {{element.region}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsClusters"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsClusters;"></tr>
+
+            <!-- Row shown when there is no matching data. -->
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="4">No hay resultados para "{{input.value}}"</td>
+            </tr>
+        </table>
+        <mat-paginator [length]="200" [pageSizeOptions]="[10, 50, 100]" aria-label="Select page"></mat-paginator>
+    </div>
 </ng-template>
-<ng-template #engagement>
-    <mat-accordion class="category" [ngClass]="group.value" *ngIf="group.value=='engagement'">
-        <ng-container *ngTemplateOutlet="objetivosGenerales"></ng-container>
-        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    Productos de Engagement
-                </mat-panel-title>
-                <mat-panel-description>
-                    Estado: {{panelOpenState ? 'open' : 'closed'}}
-                </mat-panel-description>
-            </mat-expansion-panel-header>
-            <p>Aqui los productos de Engagement</p>
-        </mat-expansion-panel>
-    </mat-accordion>
-</ng-template>
-<ng-template #conversion>
-    <mat-accordion class="category" [ngClass]="group.value" *ngIf="group.value=='conversion'">
-        <ng-container *ngTemplateOutlet="objetivosGenerales"></ng-container>
-        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    Productos de Conversión
-                </mat-panel-title>
-                <mat-panel-description>
-                    Estado: {{panelOpenState ? 'open' : 'closed'}}
-                </mat-panel-description>
-            </mat-expansion-panel-header>
-            <p>Aqui los productos de Conversión</p>
-        </mat-expansion-panel>
-    </mat-accordion>
-</ng-template>
+
 
 
 <ng-template #objetivosGenerales>
@@ -196,8 +216,158 @@
                 {{data.nombreObjetivo}}
             </mat-radio-button>
             <mat-radio-button class="objetivos-radio-button" value="5">
-                <input class="input-custom" type="text" name="" id="">
+                <!-- <input class="input-custom" type="texttarea" name="" id=""> -->
+                <textarea name="" id="" cols="30" rows="10"></textarea>
             </mat-radio-button>
         </mat-radio-group>
     </mat-expansion-panel>
+</ng-template>
+
+<!-- TABLA MEDIA MIX PRODUCTOS AWARENESS -->
+<ng-template #tablaMediaMixAwareness>
+    <div class="mat-elevation-z8">
+        <table class="table-media-mix" mat-table [dataSource]="awareness" matSort>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef>Media mix</th>
+                <td mat-cell *matCellDef="let element">{{element.nombreMediaMix.toLowerCase()}}</td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="cantidad">
+                <th mat-header-cell *matHeaderCellDef>Cantidad</th>
+                <td mat-cell *matCellDef="let element;let i = index">
+                    <input (keyup)="calcularPrecio($any($event.target))" type="number" name="" id="{{element.idMediaMix}}-input">
+
+                    <!-- <input [(ngModel)]="ngmodelMediaMix[i]" type="number" name="" id="{{element.idMediaMix}}-input"> -->
+                </td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="cpm">
+                <th mat-header-cell *matHeaderCellDef>CPM</th>
+                <td mat-cell *matCellDef="let element"><span>1</span></td>
+            </ng-container>
+
+            <!-- Weight Column -->
+            <ng-container matColumnDef="impresiones">
+                <th mat-header-cell *matHeaderCellDef> Impresiones </th>
+                <td mat-cell *matCellDef="let element"> <span>1,000</span> </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="tarifa">
+                <th mat-header-cell *matHeaderCellDef> Tarifa </th>
+                <td mat-cell *matCellDef="let element"><span id="{{element.idMediaMix}}-span-tarifa">{{element.tarifa}}</span></td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="total">
+                <th mat-header-cell *matHeaderCellDef> Total</th>
+                <td mat-cell *matCellDef="let element;let i = index"> <span id="{{element.idMediaMix}}-span-total" class="span-total">0.00</span> </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsMediaMix"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsMediaMix; let i = index"></tr>
+        </table>
+    </div>
+</ng-template>
+
+<!-- TABLA MEDIA MIX PRODUCTOS INTERES -->
+<ng-template #tablaMediaMixInteres>
+    <div class="mat-elevation-z8">
+        <table class="table-media-mix" mat-table [dataSource]="interes" matSort>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef>Media mix</th>
+                <td mat-cell *matCellDef="let element">{{element.nombreMediaMix.toLowerCase()}}</td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="cantidad">
+                <th mat-header-cell *matHeaderCellDef>Cantidad</th>
+                <td mat-cell *matCellDef="let element">
+                    <input (keyup)="calcularPrecio($any($event.target))" type="number" name="" id="{{element.idMediaMix}}-input">
+                </td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="cpm">
+                <th mat-header-cell *matHeaderCellDef>CPM</th>
+                <td mat-cell *matCellDef="let element"><span>1</span></td>
+            </ng-container>
+
+            <!-- Weight Column -->
+            <ng-container matColumnDef="impresiones">
+                <th mat-header-cell *matHeaderCellDef> Impresiones </th>
+                <td mat-cell *matCellDef="let element"> <span>1,000</span> </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="tarifa">
+                <th mat-header-cell *matHeaderCellDef> Tarifa </th>
+                <td mat-cell *matCellDef="let element"><span id="{{element.idMediaMix}}-span-tarifa">{{element.tarifa}}</span></td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="total">
+                <th mat-header-cell *matHeaderCellDef> Total</th>
+                <td mat-cell *matCellDef="let element;let i = index"> <span id="{{element.idMediaMix}}-span-total" class="span-total">0.00</span> </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsMediaMix"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsMediaMix;"></tr>
+        </table>
+    </div>
+</ng-template>
+
+<!-- TABLA MEDIA MIX PRODUCTOS INTENCION -->
+<ng-template #tablaMediaMixIntencion>
+    <div class="mat-elevation-z8">
+        <table class="table-media-mix" mat-table [dataSource]="intencion" matSort>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef>Media mix</th>
+                <td mat-cell *matCellDef="let element">{{element.nombreMediaMix.toLowerCase()}}</td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="cantidad">
+                <th mat-header-cell *matHeaderCellDef>Cantidad</th>
+                <td mat-cell *matCellDef="let element">
+                    <input (keyup)="calcularPrecio($any($event.target))" type="number" name="" id="{{element.idMediaMix}}-input">
+                </td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="cpm">
+                <th mat-header-cell *matHeaderCellDef>CPM</th>
+                <td mat-cell *matCellDef="let element"><span>1</span></td>
+            </ng-container>
+
+            <!-- Weight Column -->
+            <ng-container matColumnDef="impresiones">
+                <th mat-header-cell *matHeaderCellDef> Impresiones </th>
+                <td mat-cell *matCellDef="let element"> <span>1,000</span> </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="tarifa">
+                <th mat-header-cell *matHeaderCellDef> Tarifa </th>
+                <td mat-cell *matCellDef="let element"><span id="{{element.idMediaMix}}-span-tarifa">{{element.tarifa}}</span></td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="total">
+                <th mat-header-cell *matHeaderCellDef> Total</th>
+                <td mat-cell *matCellDef="let element;let i = index"> <span id="{{element.idMediaMix}}-span-total" class="span-total">0.00</span> </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsMediaMix"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsMediaMix;"></tr>
+        </table>
+    </div>
 </ng-template>

@@ -7,5 +7,5 @@ export interface ClientesModels {
     telefono:string;
     especialista:string;
     categoria:string;
-    logo:string
+    logo:string;
 }

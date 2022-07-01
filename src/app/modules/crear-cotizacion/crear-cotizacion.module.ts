@@ -12,6 +12,8 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { MatPseudoCheckboxModule } from '@angular/material/core';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatRadioModule} from '@angular/material/radio';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
 
 
 
@@ -33,7 +35,9 @@ import {MatRadioModule} from '@angular/material/radio';
     MatButtonToggleModule,
     MatPseudoCheckboxModule,
     MatExpansionModule,
-    MatRadioModule
+    MatRadioModule,
+    MatPaginatorModule,
+    MatTableModule
   ]
 })
 export class CrearCotizacionModule { }

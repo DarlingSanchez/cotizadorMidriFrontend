@@ -1,7 +1,7 @@
 export const dataClusters = [
     {
-        codigoCluster:100949,
-        idCategoria:1,
+        codigoCluster:100949,        
+        tipoCluster:"AWARENESS",
         nivel:"T1",
         nombreCluster:"FINANZAS",
         region:"Honduras",
@@ -17,8 +17,8 @@ export const dataClusters = [
             tablet:1,
         },
         genero:{
-            mujer:53,
-            hombre:47,
+            hombre:53,
+            mujer:47, 
         },
         edades:{
             de18_a24:20,
@@ -32,6 +32,7 @@ export const dataClusters = [
             primaria:15,
             secundaria:32,
             universidad:41,
+            educacionTecnica:6,
             postGrado: 12,
         },
         padres:{
@@ -46,7 +47,7 @@ export const dataClusters = [
     },
     {
         codigoCluster:109760,
-        idCategoria:1,
+        tipoCluster:"AWARENESS",
         nivel:"T2",
         nombreCluster:"FINANZAS | PRESTAMO AUTOS",
         region:"Honduras",
@@ -62,8 +63,8 @@ export const dataClusters = [
             tablet:1,
         },
         genero:{
-            mujer:53,
-            hombre:47,
+            hombre:53,
+            mujer:47,
         },
         edades:{
             de18_a24:19,
@@ -77,6 +78,7 @@ export const dataClusters = [
             primaria:16,
             secundaria:32,
             universidad:34,
+            educacionTecnica:6,
             postGrado: 18,
         },
         padres:{
@@ -86,6 +88,98 @@ export const dataClusters = [
         actividad:{
             hora:"11:00",
             dia:"Domingo"
+        }
+        
+    },
+    {
+        codigoCluster:107797,
+        tipoCluster:"INTERES",
+        nivel:"T1",
+        nombreCluster:"ARTE Y ENTRETENIMIENTO",
+        region:"Honduras",
+        audiencia:{
+            numeroUsuarios:874700,
+            numeroSesiones:7718800,
+            paginasVistas:22499800,
+            tiempoLectura:7.58,
+        },
+        dispositivo:{
+            movil:91,
+            desktop:8,
+            tablet:1,
+        },
+        genero:{
+            hombre:53,
+            mujer:47,
+        },
+        edades:{
+            de18_a24:19,
+            de25_a34:27,
+            de35_a44:18,
+            de45_a54:11,
+            de55_a64:10,
+            mas65:15,
+        },
+        educacion:{
+            primaria:17,
+            secundaria:31,
+            universidad:34,
+            educacionTecnica:6,
+            postGrado: 12,
+        },
+        padres:{
+            conHijos:77,
+            sinHijos:23,
+        },
+        actividad:{
+            hora:"11:00",
+            dia:"Martes"
+        }
+        
+    },
+    {
+        codigoCluster:107797,
+        tipoCluster:"INTENCION",
+        nivel:"T1",
+        nombreCluster:"ARTE Y ENTRETENIMIENTO",
+        region:"Honduras",
+        audiencia:{
+            numeroUsuarios:874700,
+            numeroSesiones:7718800,
+            paginasVistas:22499800,
+            tiempoLectura:7.58,
+        },
+        dispositivo:{
+            movil:91,
+            desktop:8,
+            tablet:1,
+        },
+        genero:{
+            hombre:53,
+            mujer:47,
+        },
+        edades:{
+            de18_a24:19,
+            de25_a34:27,
+            de35_a44:18,
+            de45_a54:11,
+            de55_a64:10,
+            mas65:15,
+        },
+        educacion:{
+            primaria:17,
+            secundaria:31,
+            universidad:34,
+            educacionTecnica:6,
+            postGrado: 12,
+        },
+        padres:{
+            conHijos:77,
+            sinHijos:23,
+        },
+        actividad:{
+            hora:"11:00",
+            dia:"Martes"
         }
         
     }

@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit  } from '@angular/core';
 import { dataClientes } from '../../../../data/clientes';
+import * as dataRow from '../../../../data/clientes.json';
 import { ClientesModels } from '../../../../core/models/clientes.model';
 
 import {MatPaginator} from '@angular/material/paginator';

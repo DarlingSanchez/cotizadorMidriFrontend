@@ -145,11 +145,11 @@ h4 {
 }
 
 .categorias {
-    width: 20%;
+    width: 15%;
 }
 
 .productos {
-    width: 80%;
+    width: 85%;
     padding-left: 20px;
 }
 
@@ -182,4 +182,60 @@ input {
     margin-top: 0px;
     margin-bottom: 0px;
     padding: 0 5px;
+}
+
+table {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+.paginacion .mat-paginator-page-size {
+    display: none !important;
+}
+
+.form-check {
+    margin-right: 5px;
+}
+
+.container-media-mix {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    margin-bottom: 15px;
+}
+
+.content-media-mix {
+    padding: 0 5px;
+}
+
+.table-media-mix {
+    width: 100%;
+}
+
+.table-media-mix td input {
+    width: 70%;
+}
+
+.table-media-mix thead tr th {
+    padding: 5px;
+}
+
+.span-total {
+    font-weight: 900;
+}
+
+.marca-visible {
+    display: block;
+}
+
+.marca-no-visible {
+    display: none;
+}
+
+.audiencias-disabled {
+    display: none;
 }

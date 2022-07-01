@@ -1,6 +1,4 @@
-import { Time } from "@angular/common";
-
 export interface ActividadModels {
-    hora:Time;
+    hora:string;
     dia:string;        
 }
