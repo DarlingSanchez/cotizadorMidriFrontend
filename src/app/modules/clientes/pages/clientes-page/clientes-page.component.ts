@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit  } from '@angular/core';
-import { dataClientes } from '../../../../data/clientes';
+//import { dataClientes } from '../../../../data/clientes';
 import * as dataRow from '../../../../data/clientes.json';
 import { ClientesModels } from '../../../../core/models/clientes.model';
 
@@ -23,7 +23,10 @@ export class ClientesPageComponent implements  AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   constructor() { 
+    const {dataClientes}:any = (dataRow as any).default
     this.clientes = new MatTableDataSource(dataClientes);
+    //this.clientes = new MatTableDataSource(dataClientes);
+    //console.log("Valor de data" + data);
   }
 
   ngOnInit(): void {

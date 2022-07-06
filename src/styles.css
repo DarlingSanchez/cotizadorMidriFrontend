@@ -83,3 +83,7 @@ body {
     margin-bottom: 30px;
     padding: 0 5px;
 }
+
+#custom-objetivo .mat-radio-label .mat-radio-label-content {
+    width: 100% !important;
+}

@@ -24,7 +24,8 @@
         </div>
 
         <div class="content-button">
-            <button class="button btn-segundo" mat-button matStepperNext>Siguiente</button>
+            <button (click)="cargarData()" class="button btn-segundo" mat-button matStepperNext>Siguiente</button>
+            <!-- <button class="button btn-segundo" (click)="cargarData()">Siguiente</button> -->
         </div>
     </mat-step>
 
@@ -64,7 +65,7 @@
 
             <div style="padding: 20px 0;" class="plantillas">
                 <h4>Seleccione una plantilla</h4>
-                <mat-button-toggle-group name="fontStyle" aria-label="Font Style" class="botones-fondos">
+                <mat-button-toggle-group name="fontStyle" aria-label="Font Style" class="botones-fondos" (change)="obtenerBackground($event)">
                     <mat-button-toggle [value]="data.id" *ngFor="let data of fondos" [checked]="data.active">
                         <img class="img-fondo" src="{{data.background}}" alt="{{data.nombreFondo}}">
                     </mat-button-toggle>
@@ -74,6 +75,8 @@
         <div class="content-button">
             <button class="button btn-segundo" mat-button matStepperPrevious>Anterior</button>
             <button class="button btn-segundo" mat-button matStepperNext>Siguiente</button>
+
+
         </div>
     </mat-step>
 
@@ -95,7 +98,10 @@
                         <br><span>Intención</span>
                     </mat-button-toggle>
                 </mat-button-toggle-group>
-
+                <div class="content-button">
+                    <button class="button btn-segundo" mat-button matStepperPrevious>Anterior</button>
+                    <button class="button btn-segundo" mat-button matStepperNext>Siguiente</button>
+                </div>
             </div>
             <div class="productos">
 
@@ -104,10 +110,7 @@
 
             </div>
         </div>
-        <div class="content-button">
-            <button class="button btn-segundo" mat-button matStepperPrevious>Anterior</button>
-            <button class="button btn-segundo" mat-button matStepperNext>Siguiente</button>
-        </div>
+
     </mat-step>
 
 
@@ -131,6 +134,11 @@
             <button class="button btn-segundo" mat-button matStepperPrevious>Anterior</button>
             <!-- <button class="button btn-segundo" mat-button (click)="stepper.reset()">Limpiar</button> -->
             <button class="button btn-segundo" mat-button (click)="crearPptx()">Generar</button>
+            <!-- <button class="button btn-segundo" mat-button (click)="obtenerMediaMix()">Ver</button> -->
+
+        </div>
+        <div class="message-notificacion" *ngIf="mostrarMsg">
+            <h2>{{messageNotificacion}}</h2>
         </div>
     </mat-step>
 
@@ -181,6 +189,13 @@
                 <td mat-cell *matCellDef="let element"> {{element.nivel}} </td>
             </ng-container>
 
+            <!-- Weight Column -->
+            <ng-container matColumnDef="usuarios">
+                <th mat-header-cell *matHeaderCellDef> Usuarios</th>
+                <!--Intl.NumberFormat().format-->
+                <td mat-cell *matCellDef="let element"> {{element.dispositivo.desktop}} </td>
+            </ng-container>
+
             <!-- Symbol Column -->
             <ng-container matColumnDef="region">
                 <th mat-header-cell *matHeaderCellDef> Región </th>
@@ -195,7 +210,7 @@
                 <td class="mat-cell" colspan="4">No hay resultados para "{{input.value}}"</td>
             </tr>
         </table>
-        <mat-paginator [length]="200" [pageSizeOptions]="[10, 50, 100]" aria-label="Select page"></mat-paginator>
+        <mat-paginator [length]="200" [pageSizeOptions]="[10, 50, 100, 200]" aria-label="Select page"></mat-paginator>
     </div>
 </ng-template>
 
@@ -205,19 +220,19 @@
     <mat-expansion-panel hideToggle>
         <mat-expansion-panel-header>
             <mat-panel-title>
-                Objetivo Específico
+                Objetivos Generales
             </mat-panel-title>
             <mat-panel-description>
-                Click para ver los objetivos específicos
+                Click para ver los objetivos generales
             </mat-panel-description>
         </mat-expansion-panel-header>
-        <mat-radio-group aria-label="Select an option" class="objetivos-radio-group">
+        <mat-radio-group aria-label="Select an option" class="objetivos-radio-group" (change)="obtenerObjetivos($event)">
             <mat-radio-button class="objetivos-radio-button" [value]="data.id" *ngFor="let data of objetivos" [checked]="data.active">
                 {{data.nombreObjetivo}}
             </mat-radio-button>
-            <mat-radio-button class="objetivos-radio-button" value="5">
+            <mat-radio-button class="objetivos-radio-button" id="custom-objetivo" value="5">
                 <!-- <input class="input-custom" type="texttarea" name="" id=""> -->
-                <textarea name="" id="" cols="30" rows="10"></textarea>
+                <textarea name="" id="text-custom-objetivo" cols="30" rows="10"></textarea>
             </mat-radio-button>
         </mat-radio-group>
     </mat-expansion-panel>
@@ -238,7 +253,7 @@
             <ng-container matColumnDef="cantidad">
                 <th mat-header-cell *matHeaderCellDef>Cantidad</th>
                 <td mat-cell *matCellDef="let element;let i = index">
-                    <input (keyup)="calcularPrecio($any($event.target))" type="number" name="" id="{{element.idMediaMix}}-input">
+                    <input (keyup)="calcularPrecio($any($event.target))" type="number" class="media-mix-input" name="" id="{{element.idMediaMix}}-input">
 
                     <!-- <input [(ngModel)]="ngmodelMediaMix[i]" type="number" name="" id="{{element.idMediaMix}}-input"> -->
                 </td>
@@ -289,7 +304,7 @@
             <ng-container matColumnDef="cantidad">
                 <th mat-header-cell *matHeaderCellDef>Cantidad</th>
                 <td mat-cell *matCellDef="let element">
-                    <input (keyup)="calcularPrecio($any($event.target))" type="number" name="" id="{{element.idMediaMix}}-input">
+                    <input (keyup)="calcularPrecio($any($event.target))" type="number" class="media-mix-input" name="" id="{{element.idMediaMix}}-input">
                 </td>
             </ng-container>
 
@@ -338,7 +353,7 @@
             <ng-container matColumnDef="cantidad">
                 <th mat-header-cell *matHeaderCellDef>Cantidad</th>
                 <td mat-cell *matCellDef="let element">
-                    <input (keyup)="calcularPrecio($any($event.target))" type="number" name="" id="{{element.idMediaMix}}-input">
+                    <input (keyup)="calcularPrecio($any($event.target))" type="number" class="media-mix-input" name="" id="{{element.idMediaMix}}-input">
                 </td>
             </ng-container>
 

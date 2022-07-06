@@ -1,21 +1,21 @@
-import { ClustersModels } from '../core/models/clusters.model';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
+@Injectable({
+  providedIn: 'root'
+})
+export class CrearCotizacionService {
 
-
-
-let data:Array<any> = []
-
-export const dataClusters:Array<any> = cargarData();
-
-
-function cargarData():Array<any>{
+  constructor() { }
+data:Array<any> = []
+  getAllCluster():Array<any>{
     const sheetId = '15lNcp-4TXaiqNHWnOuqBd-rB5TSNciYBCGqkW2Zeptc';
     const base = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?`;
     const sheetName = 'midri';
     const query = encodeURIComponent('Select *')
     const url = `${base}&sheet=${sheetName}&tq=${query}`
 
-    data = []
+    
 
     fetch(url)
         .then(res => res.text())
@@ -73,10 +73,11 @@ function cargarData():Array<any>{
                    dia:c[28].v
                }
              }
-             data.push(obj)
+             this.data.push(obj)
           }
     
-            console.log(dataClusters.length)
+            //console.log(dataClusters.length)
         })
-        return data;
+    return [];
+  }
 }
