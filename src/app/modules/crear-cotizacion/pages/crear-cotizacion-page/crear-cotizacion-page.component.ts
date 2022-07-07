@@ -294,7 +294,7 @@ codesClusterSelected:Array<any> = []
     });
     
     //OBJETIVO POR DEFAULT
-    this.objetivosGenerales = dataObjetivos.find(element => element.id == 1)?.nombreObjetivo || "No hay Objetivos";
+    this.objetivosGenerales = dataObjetivos.find(element => element.id == 1)?.nombreObjetivo || "";
 
     //BACKGROUND POR DEFAULT
     this.background = "../../../../../assets/fondos/fondo.png";
@@ -346,27 +346,74 @@ codesClusterSelected:Array<any> = []
     this.messageNotificacion = "CREANDO SLIDER PRINCIPAL........";
     //CREO EL SLIDER PRINCIPAL
     this.slide = this.pres.addSlide();
+
+    //AGREGO FONDO NEGRO CON LOGO MIDRI Y OPSA BLANCOS
+    this.slide.background = { path: "../../../../../assets/fondos/fondoNegro.png" };
     
     //AGREGO FONDO
-    this.slide.background = { path: this.background };
+    //this.slide.background = { color:"000000" };
    
-    //AGREGO IMAGEN MEDIA LUNA
-    this.slide.addImage({ path: "../../../../../assets/imgSliderPrincipal/mediaLunaTop.png", x: 2.5, y: 0, w:8, h:2.3 });
-
-    //AGREGO LOGO MIDRI
-    this.slide.addImage({ path: "../../../../../assets/imgSliderPrincipal/logoMidri.png", x: 4.5, y: 0.2, w:1.5, h:1.2 });
+    //AGREGO LOGO MIDRI BLANCO
+    //this.slide.addImage({ path: "../../../../../assets/imgSliderPrincipal/LogoMIDRIBlanco.png", x: 11.5, y: 0.2, w:1, h:0.8 });
 
     //AGREGO LOGO OPSA
-    this.slide.addImage({ path: "../../../../../assets/imgSliderPrincipal/logoOpsa.png", x: 6.8, y: 0.5, w:2.4, h:0.6});
+    //this.slide.addImage({ path: "../../../../../assets/imgSliderPrincipal/Logo-OPSABlanco.png", x: 11.3, y: 6.7, w:1.4, h:0.5});
 
-    this.slide.addShape(this.pres.ShapeType.line, {x:6, y:0.45, w:1,rotate:45, line: { color: "7044BA", width:4 } });
-
-  
-    this.slide.addText("CLUSTERS MIDRI", { x: 1.5, y: 3.7, w: 10, h:1, color: "ffffff", fontSize: 54, fontFace:"Barlow SemiBold", align: "center" });
-
-    this.slide.addText("OVERVIEW ULTIMOS 30 DIAS", { x: 1.5, y: 4.5, w: 10, h:1, color: "ffffff", fontSize: 28, fontFace:"Barlow SemiBold", align: "center" });
-
+      
    
+
+    this.slide.addText("SOLUCION DE MARKETING DIGITAL", { x: 0, y: 3.5, w: 13, h:1, color: "ffffff", fontSize: 36, fontFace:"Barlow SemiBold", align: "center" });
+
+    this.slide.addText("ENCONTRANDO SU CLIENTE TARGET", { x: 0, y: 4, w: 13, h:1, color: "ffffff", fontSize: 20, fontFace:"Barlow SemiBold", align: "center" });
+
+     //AGREGO LOGO MIDRI
+     this.slide.addImage({ path: "../../../../../assets/imgSliderPrincipal/logoMidri.png", x:6, y: 5, w:1.2, h:1 });
+
+     //AGREGO LOGO DEL CLIENTE
+     this.slide.addImage({ path: "../../../../../assets/clientes/elektra.png", x: 5, y: 2.5, w:3.3, h:0.7 });
+   
+
+      this.crearPresentacionMidri();
+  }
+
+  //SLIDER DE PRESENTACION
+  crearPresentacionMidri():void{
+
+    //CREO EL SLIDER DE PRESENTACION
+    this.slide = this.pres.addSlide();
+    
+    //AGREGO FONDO NEGRO CON LOGO MIDRI Y OPSA BLANCOS
+    this.slide.background = { path: "../../../../../assets/presentacion/queesMidri.png" };
+   
+  
+    //AGREGO TITULO
+    //this.slide.addText("¿QUE ES MIDRI?", { x: 0.6, y: 0.6, w: 10, h:0.5, color: "ffffff", fontSize: 28, fontFace:"Barlow SemiBold" });
+
+    //AGREGO DESCRIPCION
+    //this.slide.addText(`Es una Plataforma de Gestión de Datos que captura, procesa, clasifica, agrupa y almacena información de las audiencias de Grupo OPSA y las devuelve de una manera útil en clusters de audiencias que permite ejecutar campañas publicitarias al target correcto generando un alto rendimiento de las mismas en beneficio de los objetivos de nuestros clientes.`, { x: 0.6, y: 1.2, w: 12, h:1.4, color: "ffffff", fontSize: 18, fontFace:"Calibri"});
+
+    //AGREGO IMAGEN DE DIARIOS
+    //this.slide.addImage({ path: "../../../../../assets/presentacion/diarios.png", x: 2, y: 3, w:9, h:3.5 });
+
+    this.crearAgrupaUsuarios();
+  }
+
+  crearAgrupaUsuarios():void{
+    //CREO EL SLIDER DE PRESENTACION
+    this.slide = this.pres.addSlide();
+    
+    //AGREGO FONDO NEGRO CON LOGO MIDRI Y OPSA BLANCOS
+    this.slide.background = { path: "../../../../../assets/presentacion/agrupaUsuarios.png" };
+
+    this.crearFunel();
+  }
+
+  crearFunel():void{
+    //CREO EL SLIDER DE PRESENTACION
+    this.slide = this.pres.addSlide();
+    
+    //AGREGO FONDO NEGRO CON LOGO MIDRI Y OPSA BLANCOS
+    this.slide.background = { path: "../../../../../assets/presentacion/funel.png" };
 
     this.crearSliderObjetivos();
   }
@@ -377,19 +424,33 @@ codesClusterSelected:Array<any> = []
     if(this.objetivosGenerales ==="custom-objetivo"){
       let custom:HTMLTextAreaElement = <HTMLTextAreaElement>document.getElementById('text-custom-objetivo');
       this.objetivosGenerales = custom.value;
+    }else if(this.objetivosGenerales ===""){
+        this.objetivosGenerales = dataObjetivos.find(element => element.id == 1)?.nombreObjetivo || "";
     }
      //CREO EL SLIDER DE OBJETIVOS
      this.slide = this.pres.addSlide();
 
      //AGREGO FONDO
-     this.slide.background = { path: this.background };
+     this.slide.background = { path: "../../../../../assets/fondos/fondoNegro.png" };
 
      //AGREGO LOGO DE OBJETIVOS
-     this.slide.addImage({ path: "../../../../../assets/img/objetivos.png", x: 1.5, y: 2, w:3, h:3 });
+     this.slide.addImage({ path: "../../../../../assets/img/objetivos.png", x: 4.6, y: 2.5, w:3, h:3 });
 
-     this.slide.addText("OBJETIVOS GENERALES", { x: 5, y: 2.5, w: 7, h:1, color: "ffffff", fontSize: 36, fontFace:"Barlow SemiBold"});
+     //AGREGO TITULO
+    this.slide.addText("OBJETIVO DE LA SOLUCION DIGITAL", { x: 0.6, y: 0.6, w: 10, h:0.5, color: "ffffff", fontSize: 28, fontFace:"Barlow SemiBold" });
 
-     this.slide.addText(this.objetivosGenerales, { x: 5, y: 3, w: 6, h:3, color: "ffffff", fontSize: 16, fontFace:"Barlow SemiBold"});
+    //AGREGO DESCRIPCION
+    this.slide.addText(this.objetivosGenerales, { x: 0.6, y: 1.2, w: 12, h:1.4, color: "ffffff", fontSize: 18, fontFace:"Calibri"});
+
+    this.crearTitleCluester();
+  }
+
+  crearTitleCluester():void{
+    //CREO EL SLIDER DE PRESENTACION
+    this.slide = this.pres.addSlide();
+    
+    //AGREGO FONDO NEGRO CON LOGO MIDRI Y OPSA BLANCOS
+    this.slide.background = { path: "../../../../../assets/presentacion/clusterImpactar.png" };
 
     this.obtenerClusters();
   }
@@ -401,7 +462,7 @@ codesClusterSelected:Array<any> = []
   obtenerObjetivos(event:any):void{
     let {value} = event;
     if(value<4){
-      this.objetivosGenerales =  dataObjetivos.find(element => element.id == value)?.nombreObjetivo || " ";
+      this.objetivosGenerales =  dataObjetivos.find(element => element.id == value)?.nombreObjetivo || "";
     }else{      
       this.objetivosGenerales = "custom-objetivo";    
     }
@@ -586,7 +647,18 @@ codesClusterSelected:Array<any> = []
          });
       });
 
-    this.obtenerMediaMix()
+      this.crearTitleMediaMix();
+    
+  }
+
+  crearTitleMediaMix():void{
+    //CREO EL SLIDER DE PRESENTACION
+    this.slide = this.pres.addSlide();
+    
+    //AGREGO FONDO NEGRO CON LOGO MIDRI Y OPSA BLANCOS
+    this.slide.background = { path: "../../../../../assets/presentacion/mediaMix.png" };
+
+    this.obtenerMediaMix();
   }
 
   obtenerMediaMix():void{
@@ -661,7 +733,7 @@ codesClusterSelected:Array<any> = []
     this.slide = this.pres.addSlide();
     
     //AGREGO FONDO
-    this.slide.background = { path: this.background };
+    this.slide.background = { path: "../../../../../assets/fondos/fondoNegro.png" };
 
     //AGREGO EL TITULO DEL MEDIA MIX
     this.slide.addText(arr?.nombreMediaMix, { x: 1.4, y: 0.4, w: 10, h:1.2, color: "ffffff", fontSize: 36, fontFace:"Calibri" });
@@ -670,13 +742,14 @@ codesClusterSelected:Array<any> = []
      this.slide.addImage({ path: "../../../../../assets/sliderCluster/logoMidriBlanco.png", x: 1.5, y: 2, w:2, h:1.8 });
 
      //AGREGO EL PARRAFO
-    this.slide.addText(`Incrementar la consideración de compra por parte del usuario a través estrategias como la generación de tráfico, punto de venta, confirmación de asistencia a un evento, recolección de base de datos, visualización de un catálogo, entre otras.`, { x: 5.1, y: 2, w: 6.5, h:1.5, color: "ffffff", fontSize: 18, fontFace:"Calibri" });
+    this.slide.addText(dataMediaMix.find(element => element.idMediaMix == id)?.descripcion, { x: 5.1, y: 2, w: 6.5, h:1.5, color: "ffffff", fontSize: 18, fontFace:"Calibri" });
 
     //AGREGO INVERSION
-    this.slide.addText(`Inversión: $${value}`, { x: 5.1, y: 4.1, w: 6.5, h:0.2, color: "ffffff", fontSize: 24, fontFace:"Calibri" });
+    this.slide.addText(`Inversión en Dólares: $${value} `, { x: 5.1, y: 4.1, w: 6.5, h:0.2, color: "ffffff", fontSize: 24, fontFace:"Calibri" });
 
     //AGREGO ENTREGABLE
-    this.slide.addText(`Entregable: ${entregable}`, { x: 5.1, y: 4.5, w: 6.5, h:0.2, color: "ffffff", fontSize: 24, fontFace:"Calibri" });
+    this.slide.addText(`Entregable en Impresiones: ${entregable} ${dataMediaMix.find(element => element.idMediaMix == id)?.entregable}`, { x: 5.1, y: 4.5, w: 6.5, h:0.2, color: "ffffff", fontSize: 24, fontFace:"Calibri" });
+    
   }
 
   tablaResumen(arrTabRows3:any):void{
