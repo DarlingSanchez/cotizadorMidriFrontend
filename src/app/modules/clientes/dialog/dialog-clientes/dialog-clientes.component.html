@@ -1,0 +1,58 @@
+<h1 mat-dialog-title>Crear cliente</h1>
+<div mat-dialog-content>
+    <span>Por favor llene todos los datos</span>
+    <form class="clientes-add-form" [formGroup]="formClientes">
+        <div class="content">
+            <div class="form-group">
+                <label for="empresa">Nombre de la empresa</label>
+                <input formControlName="empresa" type="text" placeholder="Nombre de la empresa" class="form-input">
+            </div>
+            <div class="form-group">
+                <label for="direccion">Dirección</label>
+                <input formControlName="direccion" type="text" placeholder="Dirección" class="form-input">
+            </div>
+        </div>
+        <div class="content">
+            <div class="form-group">
+                <label for="representante">Representante de la empresa</label>
+                <input formControlName="representante" type="text" placeholder="Representante de la empresa" class="form-input">
+            </div>
+            <div class="form-group">
+                <label for="correo">Correo del representante</label>
+                <input formControlName="correo" type="email" placeholder="Correo" class="form-input">
+            </div>
+        </div>
+        <div class="content">
+            <div class="form-group">
+                <label for="telefonoEjecutivo">Teléfono del Representante</label>
+                <input formControlName="telefono" type="text" placeholder="Teléfono del representante" class="form-input">
+            </div>
+            <div class="form-group">
+                <label for="ejecutivo">Ejecutivo de la empresa</label>
+                <input formControlName="ejecutivo" type="text" placeholder="Ejecutivo de la empresa" class="form-input">
+            </div>
+        </div>
+        <div class="content">
+            <div class="form-group">
+                <label for="correoEjecutivo">Correo del ejecutivo</label>
+                <input formControlName="correoEjecutivo" type="email" placeholder="Correo del ejecutivo" class="form-input">
+            </div>
+            <div class="form-group">
+                <label for="categoria">Categoría de la empresa</label>
+                <input formControlName="categoria" type="text" placeholder="Categoría de la empresa" class="form-input">
+            </div>
+        </div>
+        <div class="form-group logo">
+            <label for="logo">Logo de la empresa en png</label>
+            <input (change)="onFileSelected($event)" formControlName="logo" type="file" accept=".png" class="form-input">
+        </div>
+        <div *ngIf="imagenPrevia">
+            <img width="100px" [src]="imagenPrevia" alt="logo">
+        </div>
+
+        <div class="form-action">
+            <button [disabled]="formClientes.invalid" mat-button [mat-dialog-close]="formClientes.value" class="button btn-segundo guardar-clientes">Guardar</button>
+            <button class="button btn-segundo" mat-button mat-dialog-close mat-dialog-close="false" type="button">Cancelar</button>
+        </div>
+    </form>
+</div>

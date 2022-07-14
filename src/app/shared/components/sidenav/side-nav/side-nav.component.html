@@ -1,7 +1,7 @@
 <div class="sidenav" [ngClass]="collapsed ? 'sidenav-collapsed':''">
     <div class="logo-container">
         <button class="logo">M</button>
-        <div class="logo-text" *ngIf="collapsed">Midri App</div>
+        <div class="logo-text" *ngIf="collapsed">Midri</div>
 
     </div>
     <ul class="sidenav-nav">
@@ -10,6 +10,9 @@
                 <i class="sidenav-nav-icon " [class]="data.icon"></i>
                 <span class="sidenav-link-text" *ngIf="collapsed">{{data.name}}</span>
             </a>
+        </li>
+        <li>
+            <button (click)="cerrarSesion()" class="button button-segundo">Cerrar Sesión</button>
         </li>
     </ul>
 </div>

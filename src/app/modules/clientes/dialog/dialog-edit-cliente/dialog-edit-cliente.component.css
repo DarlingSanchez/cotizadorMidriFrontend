@@ -1,0 +1,41 @@
+.clientes-add-form .content {
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+.content .form-group {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.clientes-add-form .content .form-group input {
+    border: solid 1px #e7e7e7;
+    border-radius: var(--color-2);
+    height: 35px;
+    padding: .25rem .5rem;
+    font-size: 90%;
+}
+
+.clientes-add-form .form-group.logo {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 10px;
+}
+
+.clientes-add-form .form-group.logo input {
+    border: none;
+    border-radius: 0;
+}
+
+button:disabled {
+    opacity: 0.5;
+}
+
+input.ng-invalid.ng-touched {
+    border: solid 2px red !important;
+}
+
+input.ng-valid.ng-touched {
+    border: solid 2px rgb(42, 221, 26) !important;
+}

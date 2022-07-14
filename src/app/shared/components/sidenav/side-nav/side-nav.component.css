@@ -109,3 +109,8 @@
 .active .sidenav-link-text {
     color: #000;
 }
+
+.button-segundo {
+    color: black !important;
+    margin-top: 30px;
+}

@@ -26,7 +26,7 @@ function cargarData():Array<any>{
            
           for (let i = 0; i < table.rows.length; i++) {
             let {c} = table.rows[i];
-            console.log(c[0].v)          
+            //console.log(c[0].v)          
  
              let obj = {
                codigoCluster:c[2].v,
@@ -76,7 +76,7 @@ function cargarData():Array<any>{
              data.push(obj)
           }
     
-            console.log(dataClusters.length)
+            //console.log(dataClusters.length)
         })
         return data;
 }

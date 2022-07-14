@@ -211,6 +211,10 @@ table {
     margin-right: 5px;
 }
 
+.form-check input {
+    width: 20px;
+}
+
 .container-media-mix {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -252,4 +256,43 @@ table {
 .message-notificacion {
     margin-top: 20px;
     color: var(--color-2);
+}
+
+.container-desc-subtotal {
+    margin: 30px 0;
+    display: flex;
+}
+
+.content-desc {
+    width: 70%;
+}
+
+.content-subtotal {
+    width: 30%;
+}
+
+.content-subtotal div {
+    display: flex;
+    border: 1px solid;
+}
+
+.content-subtotal div span {
+    font-size: 20px;
+    font-weight: bold;
+    padding: 5px;
+    border-left: 1px solid;
+}
+
+.content-subtotal #total-total {
+    font-size: 24px;
+    background: #7044BA;
+    color: white;
+}
+
+.content-subtotal .title-span {
+    width: 60%;
+}
+
+.content-subtotal .resultado-span {
+    width: 40%;
 }

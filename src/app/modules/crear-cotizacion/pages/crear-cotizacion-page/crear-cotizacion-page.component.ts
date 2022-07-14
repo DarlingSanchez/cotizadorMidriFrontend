@@ -20,6 +20,8 @@ import { MediaMixModels } from '@core/models/mediaMix.model';
 import { dataMediaMix } from 'src/app/data/mediaMix';
 import { dataClusters2 } from 'src/app/data/clusters2';
 import { CrearCotizacionService } from '../../services/crear-cotizacion.service';
+import { ClientesService } from '@modules/clientes/services/clientes.service';
+import { environment } from 'src/environments/environment';
 
 
 
@@ -36,6 +38,8 @@ import { CrearCotizacionService } from '../../services/crear-cotizacion.service'
 })
 export class CrearCotizacionPageComponent implements OnInit,AfterViewInit{
 
+  clienteSeleccionado:string = "";
+  private URL = environment.rutaImg;
 
   //MENSAJE DE NOTIFICACION PARA EL USUARIO
   messageNotificacion:string = "CREANDO PRESENTACIÓN......";
@@ -78,7 +82,7 @@ activeMediaMixIntencion:boolean = false;
   //CLUESTERS TABLE
   displayedColumnsClusters: string[] = ['check','codigo','tipoCluster','nombre', 'nivel', 'usuarios', 'region'];
   
-  clusters: MatTableDataSource<any>;
+  clusters!: MatTableDataSource<any>;
   clusters2!: Array<any>;
   //filtroClusters!: Array<any>;
   filtroClusters: Array<any> = new Array<any>();
@@ -87,14 +91,14 @@ activeMediaMixIntencion:boolean = false;
 
   //DATOS DE MEDIA MIX PRODUCTOS
   mediamix:MatTableDataSource<any>;
-  displayedColumnsMediaMix: string[] = ['nombre','cantidad','cpm','impresiones','tarifa','total'];
+  displayedColumnsMediaMix: string[] = ['nombre','cantidad','impresiones','tarifa','total'];
 
   captionButtonVerMarcas:string = "Ver más marcas";
   opsa:any;
 
 
   definirFondos(event:any):void{
-      console.log(event.value);
+      //console.log(event.value);
       this.fondos2 = dataFondos;
       this.fondos2.forEach(element => {
           if(element.idMarca === event.value){
@@ -129,14 +133,14 @@ codesClusterSelected:Array<any> = []
        }else if((clase.toLowerCase()).trim() === "checkboxintencion"){ //checkboxintencion
           this.activeMediaMixIntencion = true;
        }
-       console.log(clase.toLowerCase().trim());
-       console.table(ide);
+       //console.log(clase.toLowerCase().trim());
+       //console.table(ide);
        //this.codesClusterSelected.push(ide);
        //this.codesClusterSelected = dataClusters.filter(data => data.codigoCluster== parseInt(ide));
        this.codesClusterSelected.push(dataClusters.find(element => element.codigoCluster == parseInt(ide)));
      }
-     console.table(this.codesClusterSelected);
-     console.log(this.codesClusterSelected.length)
+     //console.table(this.codesClusterSelected);
+     //console.log(this.codesClusterSelected.length)
  
   }
 
@@ -179,7 +183,7 @@ codesClusterSelected:Array<any> = []
     }
     this.filtroClusters = []; 
     //this.filtrarDatos.pop();
-    console.log(event.value.length)
+    //console.log(event.value.length)
   }
 
   calcularPrecio(event:any):void{
@@ -189,17 +193,73 @@ codesClusterSelected:Array<any> = []
     // let total = document.getElementById(id.replace('input','span-total'));
     // let tarifaFloat = tarifa?.innerText;
 
-    let tarifa2:HTMLSpanElement = <HTMLSpanElement>document.getElementById(id.replace('input','span-tarifa'));
-    let total2:HTMLSpanElement = <HTMLSpanElement>document.getElementById(id.replace('input','span-total'));
+    let tarifa:HTMLSpanElement = <HTMLSpanElement>document.getElementById(id.replace('input','span-tarifa'));
+    let total:HTMLSpanElement = <HTMLSpanElement>document.getElementById(id.replace('input','span-total'));
+    let impresiones:HTMLSpanElement = <HTMLSpanElement>document.getElementById(id.replace('input','span-impresiones'));
 
-    total2.innerHTML = this.calculoTotal(parseFloat(tarifa2.innerText),value).toString();
+    let total2 = this.calculoTotal(parseFloat(tarifa.innerText),value);
+    total.innerHTML = total2;
+    impresiones.innerHTML = this.calculoImpresiones(parseFloat(tarifa.innerText),value).toString();
+
+    let spanTotal = document.getElementsByClassName('span-total');
+    this.calcularTotalTotal(spanTotal, parseFloat(total2));
    
+  }
+
+  calcularTotalTotal(spanTotal:any, valor:number):void{
+    //console.log(spanTotal[0].innerHTML);
+    let sub_total = 0;
+    for (let index = 0; index < spanTotal.length; index++) {
+      sub_total +=  parseFloat(spanTotal[index].innerHTML.replace(',',''));
+    }
+    
+    let subTotal:HTMLSpanElement = <HTMLSpanElement>document.getElementById('sub-total-total');
+
+    let selectDescuento:HTMLSelectElement =<HTMLSelectElement>document.getElementById("descuentosOPSA");
+    //console.log(selectDescuento.value)
+
+    let descuento:HTMLSpanElement = <HTMLSpanElement>document.getElementById('descuento-total');
+    let impuesto:HTMLSpanElement = <HTMLSpanElement>document.getElementById('impuesto-total');
+
+    let totalTotal:HTMLSpanElement = <HTMLSpanElement>document.getElementById('total-total');
+
+    //console.log(this.sumatoriaTotal(sub_total,parseFloat(selectDescuento.value))[0]);
+    subTotal.innerHTML = "$  " + Intl.NumberFormat().format(sub_total).toString(); 
+    descuento.innerHTML = "$  " + Intl.NumberFormat().format(this.sumatoriaTotal(sub_total,parseFloat(selectDescuento.value))[0]).toString(); 
+    impuesto.innerHTML = "$  " + Intl.NumberFormat().format(this.sumatoriaTotal(sub_total,parseFloat(selectDescuento.value))[1]).toString();
+    totalTotal.innerHTML = "$  " + Intl.NumberFormat().format(this.sumatoriaTotal(sub_total,parseFloat(selectDescuento.value))[2]).toString();
+  }
+  sumatoriaTotal(subTotal:number, descuento:number):Array<number>{
+    let desc = subTotal * (descuento/100);
+    let isv = (subTotal-desc) * 0.15;
+    let total = (subTotal - desc) + isv;
+    return [desc, isv, total];
   }
   calculoTotal(valor1:number, valor2:number):string{
     let resultado = valor1*valor2;
-    return resultado.toFixed(2);
+    return Intl.NumberFormat().format(resultado);
+  }
+  calculoImpresiones(valor1:number, valor2:number):string{
+    let resultado = valor1*valor2*1000;
+    return Intl.NumberFormat().format(resultado);
   }
 
+  calculoDescuento():void{ //calculando el descuento al cambiar el select
+    let selectDescuento:HTMLSelectElement =<HTMLSelectElement>document.getElementById("descuentosOPSA");
+    let descuento:HTMLSpanElement = <HTMLSpanElement>document.getElementById('descuento-total');
+    let impuesto:HTMLSpanElement = <HTMLSpanElement>document.getElementById('impuesto-total');
+
+    let totalTotal:HTMLSpanElement = <HTMLSpanElement>document.getElementById('total-total');
+    let subTotal:HTMLSpanElement = <HTMLSpanElement>document.getElementById('sub-total-total');
+
+    let subTotalLimpio = subTotal.innerHTML.replace('$ ','');
+
+    descuento.innerHTML = "$  " + Intl.NumberFormat().format(this.sumatoriaTotal(parseFloat(subTotalLimpio.replace(',','')),parseFloat(selectDescuento.value))[0]).toString(); 
+    impuesto.innerHTML = "$  " + Intl.NumberFormat().format(this.sumatoriaTotal(parseFloat(subTotalLimpio.replace(',','')),parseFloat(selectDescuento.value))[1]).toString();
+    totalTotal.innerHTML = "$  " + Intl.NumberFormat().format(this.sumatoriaTotal(parseFloat(subTotalLimpio.replace(',','')),parseFloat(selectDescuento.value))[2]).toString();
+
+    //console.log(selectDescuento.value, subTotal.innerHTML.replace(',',''))
+  }
   cargarData():void{
     const sheetId = '15lNcp-4TXaiqNHWnOuqBd-rB5TSNciYBCGqkW2Zeptc';
     const base = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?`;
@@ -218,7 +278,7 @@ codesClusterSelected:Array<any> = []
            
           for (let i = 0; i < table.rows.length; i++) {
             let {c} = table.rows[i];
-            console.log(c[0].v)          
+            //console.log(c[0].v)          
  
              let obj = {
                codigoCluster:c[2].v,
@@ -268,14 +328,14 @@ codesClusterSelected:Array<any> = []
              this.clusters2.push(obj)
           }
     
-            console.log(dataClusters.length)
+            //console.log(dataClusters.length)
         })
         //return this.clusters2;
         //this.clusters = new MatTableDataSource(this.clusters2);
   }
  
   slide:any;
-  constructor() { 
+  constructor(private clientesService:ClientesService) { 
     this.ngmodelMediaMix= ["awareness0","awareness1","awareness2","awareness3","awareness4","awareness5"];
   
     this.clusters = new MatTableDataSource(dataClusters);
@@ -302,8 +362,17 @@ codesClusterSelected:Array<any> = []
   }
 
   ngOnInit(): void {
+    //this.clusters = new MatTableDataSource(dataClusters);
+    this.clientesService.getClientes$()
+    .subscribe((data=>{
+      this.clientes = data;
+      setTimeout(()=>{
+        this.setLogoCliente();
+      },200)
+      
+    }))
     
-    this.clientes = dataClientes;
+    
     this.definirFondos({value:0});
     //this.fondos = dataFondos;
     this.marcas = dataMarcasOpsa;
@@ -340,7 +409,18 @@ codesClusterSelected:Array<any> = []
     //this.obtenerObjetivos();
     
   }
+  setLogoCliente():void{
+    let selectCliente:HTMLSelectElement =<HTMLSelectElement>document.getElementById("listClientes");
 
+    this.clientesService.getCliente$(parseInt(selectCliente.value))
+     .subscribe((cliente=>{   //ME SUSCRIBO PARA OBTENER EL CLIENTE DEL ID ENVIADO   
+      this.clienteSeleccionado = cliente.logo
+     }))
+  }
+  getLogocliente():string{
+    //console.log(this.URL + this.clienteSeleccionado)
+    return this.URL + this.clienteSeleccionado;
+  }
   obtenerSliderPrincipal():void{ //SLIDER PRINCIPAL 
 
     this.messageNotificacion = "CREANDO SLIDER PRINCIPAL........";
@@ -370,7 +450,8 @@ codesClusterSelected:Array<any> = []
      this.slide.addImage({ path: "../../../../../assets/imgSliderPrincipal/logoMidri.png", x:6, y: 5, w:1.2, h:1 });
 
      //AGREGO LOGO DEL CLIENTE
-     this.slide.addImage({ path: "../../../../../assets/clientes/elektra.png", x: 5, y: 2.5, w:3.3, h:0.7 });
+     this.slide.addImage({ path: this.getLogocliente(), x: 5, y: 1.2, sizing: { type: "contain", w: 3, h: 2 } });
+     //this.slide.addImage({ path: "../../../../../assets/imgSliderPrincipal/logoMidri.png", x: 5, y: 2.5, w:3.3, h:0.7 });
    
 
       this.crearPresentacionMidri();
@@ -470,8 +551,8 @@ codesClusterSelected:Array<any> = []
   }
   obtenerBackground(event:any):void{
     let {value, source} = event
-      console.log(source.id);
-      console.log(document.getElementById(source.id)?.getElementsByClassName('img-fondo')[0].getAttribute('src'))
+      //console.log(source.id);
+      //console.log(document.getElementById(source.id)?.getElementsByClassName('img-fondo')[0].getAttribute('src'))
       //console.table(event)
       this.background = document.getElementById(source.id)?.getElementsByClassName('img-fondo')[0].getAttribute('src') || "../../../../../assets/fondos/fondo.png"
   }
@@ -553,8 +634,9 @@ codesClusterSelected:Array<any> = []
           
 
           //TITULO GRAFICO DE EDADES
-          this.slide.addImage({ path: "../../../../../assets/sliderCluster/iconoEdades.png", x: 6, y: 1.5, w:0.5, h:0.6 });
-        this.slide.addText(`EDADES`, { x: 6.5, y: 1.5, w: 2, h:0.6, color: "ffffff", fontSize: 24, fontFace:"Calibri" });
+        this.slide.addText(`EDADES`, { x: 6.25, y: 1.5, w: 2, h:0.6, color: "ffffff", fontSize: 24, fontFace:"Calibri" });
+
+        this.slide.addImage({ path: "../../../../../assets/sliderCluster/iconoEdades.png", x: 6.6, y: 3.1, w:0.5, h:0.6 });
 
           //GRAFICO DE EDADES
          
@@ -601,8 +683,10 @@ codesClusterSelected:Array<any> = []
 
          
          //TITULO GRAFICO DE EDUCACION
-         this.slide.addImage({ path: "../../../../../assets/sliderCluster/iconoEducacion.png", x: 9, y: 1.5, w:0.6, h:0.6 });
-         this.slide.addText(`EDUCACIÓN`, { x: 9.6, y: 1.5, w: 2, h:0.6, color: "ffffff", fontSize: 24, fontFace:"Calibri" });
+         this.slide.addImage({ path: "../../../../../assets/sliderCluster/iconoEducacion.png", x: 10.7, y: 3, w:0.6, h:0.6 });
+         this.slide.addText(`EDUCACIÓN`, { x: 10, y: 1.5, w: 2, h:0.6, color: "ffffff", fontSize: 24, fontFace:"Calibri" });
+
+        
  
            //GRAFICO DE EDUCACION
           
@@ -668,63 +752,116 @@ codesClusterSelected:Array<any> = []
 
     //DATOS PARA LA TABLA RESUMEN
     let totalInversion = 0;
-    let arrTabRows3 = [
+    let totalFilas =0;
+    let altoFila = 0;
+    let tamanoLetra = 12;
+    let tablaResumenMediaMix = [
       [
         { text: "Producto", options: { fontSize: 20, bold:true }  }, 
+        { text: "CPMs", options: { fontSize: 20, bold:true } }, 
         { text: "Entregable", options: { fontSize: 20, bold:true } }, 
         { text: "Inversión", options: { fontSize: 20, bold:true } }
       ]
     ];
-
-    
     for (let index = 0; index < inputTotal.length; index++) {
-      const filterValue = (inputTotal[index] as HTMLInputElement).value;
-      const filterId = (inputTotal[index] as HTMLInputElement).id;
-      
-      if(!isNaN(parseFloat(filterValue))){
-        //console.log(filterId + " " + filterValue);  
-        let id = filterId.replace('-input','');
-        let arr = dataMediaMix.find(element => element.idMediaMix == id)
-        this.cargarMediaMix(id, parseFloat(filterValue), arr);
-        
-        totalInversion += parseFloat(filterValue);
-        let entregable = this.calcularTarifa(parseFloat(filterValue), arr?.tarifa || 1);
-        //LLENAR TABLA RESUMEN
-        arrTabRows3.push(
-          [
-            {text:arr?.nombreMediaMix || "",options: { fontSize: 16, bold:false }},
-            {text: Intl.NumberFormat().format(entregable).toString(), options: { fontSize: 16, bold:false }},
-            {text: Intl.NumberFormat().format(parseFloat(filterValue)), options: { fontSize: 16, bold:false }}
-          ]
-        );
+      const valueInput = (inputTotal[index] as HTMLInputElement).value;      
+      if(!isNaN(parseFloat(valueInput))){
+        totalFilas++;
       }
-      
     }
-    arrTabRows3.push(
+    
+    if(totalFilas<=11){
+      tamanoLetra = 13;
+      altoFila = 0.33;
+    }else if(totalFilas>11 && totalFilas<=14){
+      tamanoLetra = 11;
+      altoFila = 0.28;
+    }else{
+      tamanoLetra = 9;
+      altoFila = 0.25;
+    }
+    
+     for (let index = 0; index < inputTotal.length; index++) {
+       const filterValue = (inputTotal[index] as HTMLInputElement).value;
+       const filterId = (inputTotal[index] as HTMLInputElement).id;
+    
+       if(!isNaN(parseFloat(filterValue))){
+         //console.log(filterId + " " + filterValue);  
+         totalFilas++;
+         let id = filterId.replace('-input','');
+         let arr = dataMediaMix.find(element => element.idMediaMix == id)
+         this.cargarMediaMix(id, parseFloat(filterValue), arr);
+      
+         totalInversion += parseFloat(filterValue);
+         let entregable = this.calcularTarifa(parseFloat(filterValue), arr?.tarifa || 1);
+         //LLENAR TABLA RESUMEN
+         tablaResumenMediaMix.push(
+           [
+             {text:arr?.nombreMediaMix || "",options: { fontSize: tamanoLetra, bold:false }},
+             {text: Intl.NumberFormat().format(parseFloat(filterValue)), options: { fontSize: tamanoLetra, bold:false }},            
+             {text: Intl.NumberFormat().format(entregable*1000).toString(), options: { fontSize: tamanoLetra, bold:false }},
+             {text: Intl.NumberFormat().format(entregable).toString(), options: { fontSize: tamanoLetra, bold:false }},            
+           ]
+         );
+       }
+    
+     }
+    
+    let subTotal:HTMLSpanElement = <HTMLSpanElement>document.getElementById('sub-total-total');
+    let descuento:HTMLSpanElement = <HTMLSpanElement>document.getElementById('descuento-total');
+    let selectDescuento:HTMLSelectElement =<HTMLSelectElement>document.getElementById("descuentosOPSA");
+    let impuesto:HTMLSpanElement = <HTMLSpanElement>document.getElementById('impuesto-total');
+    let total:HTMLSpanElement = <HTMLSpanElement>document.getElementById('total-total');
+    
+    
+    //AGREGO EL SUBTOTAL A LA TABLA RESUMEN
+    tablaResumenMediaMix.push(
       [ //SUB TOTAL
-        {text:"",options: { fontSize: 16, bold:false }},
-        {text: "Sub-Total:", options: { fontSize: 16, bold:false }},
-        {text: Intl.NumberFormat().format(totalInversion).toString(), options: { fontSize: 16, bold:false }}
+        {text:"",options: { fontSize: tamanoLetra, bold:false }},
+        {text:"",options: { fontSize: tamanoLetra, bold:false }},
+        {text: "Sub-Total:", options: { fontSize: tamanoLetra, bold:false }},
+        {text:subTotal.innerHTML, options: { fontSize: tamanoLetra, bold:false }}
       ],
+      
+    );
+    //AGREGO EL DESCUENTO SI EXISTE A LA TABLA RESUMEN
+
+    if(selectDescuento.value!="0"){
+      tablaResumenMediaMix.push(
+        [ //SUB TOTAL
+          {text:"",options: { fontSize: tamanoLetra, bold:false }},
+          {text:"",options: { fontSize: tamanoLetra, bold:false }},
+          {text: "Descuento:", options: { fontSize: tamanoLetra, bold:false }},
+          {text:descuento.innerHTML, options: { fontSize: tamanoLetra, bold:false }}
+        ],        
+      );
+    }
+
+    //AGREGO EL IMPUESTO Y TOTAL A PAGAR A LA TABLA RESUMEN
+    tablaResumenMediaMix.push(
       [ //IMPUESTO
-        {text:"",options: { fontSize: 16, bold:false }},
-        {text: "Impuesto:", options: { fontSize: 16, bold:false }},
-        {text: Intl.NumberFormat().format((totalInversion * 0.15)).toString(), options: { fontSize: 16, bold:false }}
+        {text:"",options: { fontSize: tamanoLetra, bold:false }},
+        {text:"",options: { fontSize: tamanoLetra, bold:false }},
+        {text: "Impuesto:", options: { fontSize: tamanoLetra, bold:false }},
+        {text: impuesto.innerHTML, options: { fontSize: tamanoLetra, bold:false }}
       ],
       [ //TOTAL TOTAL
-        {text:"",options: { fontSize: 20, bold:true }},
-        {text: "Total:", options: { fontSize: 20, bold:true }},
-        {text: Intl.NumberFormat().format(((totalInversion * 0.15) + totalInversion)).toString(), options: { fontSize: 20, bold:true }}
+        {text:"",options: { fontSize: tamanoLetra, bold:true }},
+        {text:"",options: { fontSize: tamanoLetra, bold:false }},
+        {text: "Total:", options: { fontSize: 16, bold:true }},
+        {text: total.innerHTML, options: { fontSize: 16, bold:true }}
       ],
-    );
-    this.tablaResumen(arrTabRows3);
+    )
+    
+    this.graficoResumen();
+    this.tablaResumen(tablaResumenMediaMix, altoFila);
     //console.table(totalMediaMixSelected)
   }
   calcularTarifa(valor:number, tarifa:number):number{
     return valor * tarifa;
   }
   cargarMediaMix(id:string, value:number, arr:any):void{
-    console.log(id + " " + value);  
+    //console.log(id + " " + value);  
     
     //let arr = dataMediaMix.find(element => element.idMediaMix == id)
 
@@ -742,35 +879,105 @@ codesClusterSelected:Array<any> = []
      this.slide.addImage({ path: "../../../../../assets/sliderCluster/logoMidriBlanco.png", x: 1.5, y: 2, w:2, h:1.8 });
 
      //AGREGO EL PARRAFO
-    this.slide.addText(dataMediaMix.find(element => element.idMediaMix == id)?.descripcion, { x: 5.1, y: 2, w: 6.5, h:1.5, color: "ffffff", fontSize: 18, fontFace:"Calibri" });
+    this.slide.addText(dataMediaMix.find(element => element.idMediaMix == id)?.descripcion, { x: 4.1, y: 2, w: 6.5, h:1.5, color: "ffffff", fontSize: 18, fontFace:"Calibri" });
 
     //AGREGO INVERSION
-    this.slide.addText(`Inversión en Dólares: $${value} `, { x: 5.1, y: 4.1, w: 6.5, h:0.2, color: "ffffff", fontSize: 24, fontFace:"Calibri" });
+    this.slide.addText(`Inversión en Dólares: $${Intl.NumberFormat().format(value)} `, { x: 4.1, y: 4.1, w: 6.5, h:0.2, color: "ffffff", fontSize: 24, fontFace:"Calibri" });
 
     //AGREGO ENTREGABLE
-    this.slide.addText(`Entregable en Impresiones: ${entregable} ${dataMediaMix.find(element => element.idMediaMix == id)?.entregable}`, { x: 5.1, y: 4.5, w: 6.5, h:0.2, color: "ffffff", fontSize: 24, fontFace:"Calibri" });
+    this.slide.addText(`Entregable en Impresiones: ${Intl.NumberFormat().format(entregable*1000)} ${dataMediaMix.find(element => element.idMediaMix == id)?.entregable}`, { x: 4.1, y: 4.5, w: 7.5, h:0.5, color: "ffffff", fontSize: 24, fontFace:"Calibri" });
     
   }
 
-  tablaResumen(arrTabRows3:any):void{
+  labels:Array<any> = [];
+    values:Array<any> = [];
+  graficoResumen():void{
+
+    this.slide = this.pres.addSlide();
+    
+    //AGREGO FONDO
+    this.slide.background = { path: "../../../../../assets/fondos/fondoNegro.png" };
+
+    //AGREGO EL TITULO DEL MEDIA MIX
+    this.slide.addText("CLUSTERS AFINES QUE SE IMPACTARÁN", { x: 1.4, y: 0.4, w: 10, h:1.2, color: "ffffff", fontSize: 36, fontFace:"Calibri" });
+
+    this.slide.addText("Clusters de audiencia a impactar", { x: 0.5, y: 1.5, w: 5, h:0.5, color: "ffffff", fontSize: 24, fontFace:"Calibri" });
+
+    
+
+    let totalUsuarios = 0;
+
+    let position = 2.3;
+    
+    this.codesClusterSelected.forEach(element => {
+        this.labels.push(element.nombreCluster);
+        this.values.push(element.audiencia.numeroUsuarios);
+        totalUsuarios += element.audiencia.numeroUsuarios;
+
+        this.slide.addText(`${element.nombreCluster.toLowerCase()} (${element.tipoCluster.toLowerCase()}) ${Intl.NumberFormat().format(element.audiencia.numeroUsuarios)} usuarios`, { x: 0.5, y: position, w: 8, h:0.2, color: "ffffff", fontSize: 18, fontFace:"Calibri" });
+
+        position+=0.3;
+    });
+    
+
+    this.slide.addText(`Total audiencia target a impactar: ${Intl.NumberFormat().format(totalUsuarios)} usuarios`, { x: 0.5, y: 6.4, w: 10, h:0.5, color: "ffffff", fontSize: 24, fontFace:"Calibri" });
+       //GRAFICO DE RESUMEN CLUSTERS
+          
+       let resumenClusters = [
+        {
+          name: "Resumen",
+          labels: this.labels,
+          values: this.values,
+        },
+      ]
+      this.slide.addChart(this.pres.ChartType.pie, resumenClusters, {
+        x: 7,
+        y: 1.5,
+        w: 4.5,
+        h: 4.5,
+        chartArea: { fill: { color: "FFFFFF" } },
+        holeSize: 70,
+        showLabel: false,
+        showValue: false,
+        showPercent: true,
+        showLegend: true,
+        legendPos: "b",
+        //
+        chartColors: "FFFFFF",
+        //dataBorder: { pt: "2", color: "FFFFFF" },
+        dataLabelColor: "FFFFFF",
+        dataLabelFontSize: 12,
+        //
+        showTitle: false,
+        title: "Project Status",
+        titleColor: "FFFFFF",
+        titleFontFace: "Calibri",
+        titleFontSize: 24,
+        legendColor:"FFFFFF"
+        
+      });
+      this.codesClusterSelected = [];
+  }
+
+  tablaResumen(tablaResumenMediaMix:any , altoFila:number):void{
     this.messageNotificacion = "CREANDO SLIDER TABLA RESUMEN........";
     this.slide = this.pres.addSlide();
     //AGREGO FONDO
-    this.slide.background = { path: this.background };
+    this.slide.background = { path: "../../../../../assets/fondos/fondoNegro.png" };
 
     //AGREGO TITULO
-    this.slide.addText(`RESUMEN INVERSION`, { x: 1.5, y: 0.3, w:9, h:0.5, color: "ffffff", fontSize: 36, fontFace:"Barlow SemiBold" });
+    this.slide.addText(`RESUMEN INVERSION`, { x: 1.5, y: 0.2, w:9, h:0.5, color: "ffffff", fontSize: 36, fontFace:"Barlow SemiBold" });
     
    
-    this.slide.addTable(arrTabRows3, {
-      x: 1.5,
-      y: 1.3,
-      rowH: [0.5],
-      colW: [6, 2, 2],
+    this.slide.addTable(tablaResumenMediaMix, {
+      x: 0.5,
+      y:0.8,
+      rowH: [altoFila],
+      colW: [6, 1,2, 2],
       fill: { color: "F7F7F7" },
       color: "000000",
       fontSize: 14,
-      valign: "center",      
+      valign: "center",   
       border: { pt: "1", color: "BBCCDD" },
     });
 

@@ -1,0 +1,13 @@
+table {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+.paginacion .mat-paginator-page-size {
+    display: none !important;
+}

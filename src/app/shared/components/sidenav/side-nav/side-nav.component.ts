@@ -1,5 +1,7 @@
 import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 import { navbarData } from './dataNav';
+import { Router } from '@angular/router';
 
 interface SideNavToggle{
   screenWidth:number;
@@ -24,7 +26,7 @@ export class SideNavComponent implements OnInit {
   //   }
   // }
 
-  constructor() { }
+  constructor(private cookie:CookieService, private router:Router) { }
 
   ngOnInit(): void {
     this.screenWidth = window.innerWidth;
@@ -41,5 +43,10 @@ export class SideNavComponent implements OnInit {
   closeSidenav(){
     this.collapsed = false;
     this.onToggleSideNav.emit({collapsed:this.collapsed, screenWidth:this.screenWidth});
+  }
+
+  cerrarSesion(){
+    this.cookie.deleteAll()
+    this.router.navigate(['/login']);
   }
 }
