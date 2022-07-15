@@ -25,33 +25,33 @@ export class DialogClientesComponent implements OnInit {
     this.formClientes = this.form.group(
       {
           empresa:new FormControl('',[
-            //Validators.required
+            Validators.required
           ]),
           direccion:new FormControl('',[
-            //Validators.required
+            Validators.required
           ]),
           representante:new FormControl('',[
-            //Validators.required
+            Validators.required
           ]),
           correo:new FormControl('',[
-            //Validators.required,
-            //Validators.email
+            Validators.required,
+            Validators.email
           ]),
           telefono:new FormControl('',[
-            //Validators.required
+            Validators.required
           ]),
           ejecutivo:new FormControl('',[
-            //Validators.required
+            Validators.required
           ]),
           correoEjecutivo:new FormControl('',[
-            //Validators.required,
-            //Validators.email
+            Validators.required,
+            Validators.email
           ]),
           categoria:new FormControl('',[
-            //Validators.required
+            Validators.required
           ]),
           logo:new FormControl('',[
-            //Validators.required            
+            Validators.required            
           ])
       }
     )
