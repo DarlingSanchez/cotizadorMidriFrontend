@@ -1,16 +1,18 @@
-<header>
+<header class="header-mobile">
+
     <div class="header-container--wrapper ">
         <!--Zona del artista-->
         <div class="logo logo-container">
-            <ng-container *ngTemplateOutlet="logoZone"></ng-container>
+
+            <ng-container *ngTemplateOutlet="titleZone"></ng-container>
         </div>
         <!--Zona del reproductor-->
         <div class="title title-container">
-            <ng-container *ngTemplateOutlet="titleZone"></ng-container>
+            <ng-container *ngTemplateOutlet="logoZone"></ng-container>
         </div>
         <!--Zona del controles adicionales-->
         <div class="user user-container">
-            <ng-container *ngTemplateOutlet="userZone"></ng-container>
+            <!-- <ng-container *ngTemplateOutlet="userZone"></ng-container> -->
         </div>
     </div>
 </header>
@@ -19,15 +21,41 @@
 
 <ng-template #logoZone>
     <div class="logo-content">
-        <img src="../../../img/logo.png" width="150" height="150" alt="Logo" class="cover">
+        <img src="../../../../assets/img/logo.png" width="60" height="60" alt="Logo" class="cover">
     </div>
 </ng-template>
 
 <ng-template #titleZone>
-    <div class="title-content">
-        <div class="title">
-            <h1>Midri</h1>
-        </div>
+    <div class="menu-hamburger">
+        <button [matMenuTriggerFor]="menu">
+            <i class="fa fa-bars" aria-hidden="true"></i>
+        </button>
+        <mat-menu class="menu-mobile" #menu="matMenu">
+            <button mat-menu-item routerLink="/">
+                <i class="fa fa-home" aria-hidden="true"></i>
+                <span>Home</span>
+            </button>
+            <button mat-menu-item routerLink="/clientes">
+                <i class="fa fa-users" aria-hidden="true"></i>
+                <span>Clientes</span>
+             </button>
+            <button mat-menu-item routerLink="/productos">
+                <i class="fal fa-box-open" aria-hidden="true"></i>
+                <span>Productos</span>
+            </button>
+            <button mat-menu-item routerLink="/crear-cotizacion">
+                <i class="fa fa-file" aria-hidden="true"></i>
+                <span>Crear Cotización</span>
+            </button>
+            <button mat-menu-item routerLink="/ver-cotizaciones">
+                <i class="fa fa-th" aria-hidden="true"></i>
+                <span>Ver Cotizaciones</span>
+            </button>
+            <button class="cerrar-sesion" mat-menu-item (click)="cerrarSesion()">
+                <i class="fa fa-sign-out sidenav-nav-icon" aria-hidden="true"></i>
+                <span>Cerrar Sesión</span>
+            </button>
+        </mat-menu>
     </div>
 </ng-template>
 

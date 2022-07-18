@@ -17,14 +17,15 @@ interface SideNavToggle{
 export class SideNavComponent implements OnInit {
 
   
-  // @HostListener('window:resize', ['$event'])
-  // onResize(event:any){
-  //   this.screenWidth = window.innerWidth;
-  //   if(this.screenWidth <=768){
-  //     this.collapsed = false;
-  //     this.onToggleSideNav.emit({collapsed:this.collapsed, screenWidth:this.screenWidth});
-  //   }
-  // }
+  @HostListener('window:resize', ['$event'])
+  onResize(event:any){
+    this.screenWidth = window.innerWidth;
+    //console.log(this.screenWidth)
+    if(this.screenWidth <=768){
+      this.collapsed = false;
+      this.onToggleSideNav.emit({collapsed:this.collapsed, screenWidth:this.screenWidth});
+    }
+  }
 
   constructor(private cookie:CookieService, private router:Router) { }
 
@@ -34,7 +35,7 @@ export class SideNavComponent implements OnInit {
 
   @Output() onToggleSideNav: EventEmitter<SideNavToggle> = new EventEmitter();
   screenWidth = 0;
-  collapsed = true;
+  collapsed = false;
   navData = navbarData;
   toggleCollapse():void{
     this.collapsed = !this.collapsed;

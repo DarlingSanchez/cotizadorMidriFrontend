@@ -71,6 +71,10 @@
     margin-bottom: 0.625rem;
 }
 
+.sidenav-nav-item.cerrarSesion {
+    margin-top: 50px;
+}
+
 .sidenav-nav-link {
     display: flex;
     align-items: center;

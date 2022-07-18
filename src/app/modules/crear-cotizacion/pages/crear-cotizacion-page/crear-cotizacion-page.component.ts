@@ -1,5 +1,5 @@
-import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { StepperOrientation, STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
+import { AfterViewInit, Component, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 
 import { ClientesModels } from '@core/models/clientes.model';
 import { FondosModels } from '@core/models/fondos.model';
@@ -38,6 +38,8 @@ import { environment } from 'src/environments/environment';
 })
 export class CrearCotizacionPageComponent implements OnInit,AfterViewInit{
 
+  //orientacion!:string;
+  orientation!: StepperOrientation
   clienteSeleccionado:string = "";
   private URL = environment.rutaImg;
 
@@ -334,10 +336,23 @@ codesClusterSelected:Array<any> = []
         //this.clusters = new MatTableDataSource(this.clusters2);
   }
  
+  @HostListener('window:resize', ['$event'])
+  onResize(event:any){
+    if(window.innerWidth>500){
+      this.orientation = "horizontal";
+    }else{
+      this.orientation = "vertical";
+    }
+  }
   slide:any;
   constructor(private clientesService:ClientesService) { 
     this.ngmodelMediaMix= ["awareness0","awareness1","awareness2","awareness3","awareness4","awareness5"];
   
+    if(window.innerWidth>500){
+      this.orientation = "horizontal";
+    }else{
+      this.orientation = "vertical";
+    }
     this.clusters = new MatTableDataSource(dataClusters);
     //this.clusters = new MatTableDataSource(this.cargarData());
     

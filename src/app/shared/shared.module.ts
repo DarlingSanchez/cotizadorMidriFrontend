@@ -5,6 +5,8 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { RouterModule } from '@angular/router';
 import { SideNavComponent } from './components/sidenav/side-nav/side-nav.component';
+import {MatMenuModule} from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
 
 
 
@@ -17,7 +19,9 @@ import { SideNavComponent } from './components/sidenav/side-nav/side-nav.compone
   ],
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    MatMenuModule,
+    MatButtonModule
   ],
   exports:[
     SideBarComponent,

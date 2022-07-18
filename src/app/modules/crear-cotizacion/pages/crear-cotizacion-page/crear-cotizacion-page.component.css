@@ -296,3 +296,26 @@ table {
 .content-subtotal .resultado-span {
     width: 40%;
 }
+
+@media (max-width:500px) {
+    .content-cliente-plantilla {
+        flex-direction: column;
+    }
+    .plantilla,
+    .cliente {
+        width: 100%;
+    }
+    .mat-horizontal-content-container {
+        padding: 0 10px;
+    }
+    .plantilla .botones-fondos {
+        grid-template-columns: 50% 50% !important;
+    }
+    .plantilla .botones-fondos .img-logo {
+        margin: 0px;
+        width: 90px;
+    }
+    .mat-step-header {
+        padding: 10px !important;
+    }
+}

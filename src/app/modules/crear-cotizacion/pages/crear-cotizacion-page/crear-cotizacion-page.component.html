@@ -1,7 +1,7 @@
 <h1>Crea una cotización</h1>
 
-<mat-stepper (selectionChange)="cambioPasos()">
-    <mat-step label="Cliente y marca" state="phone">
+<mat-stepper (selectionChange)="cambioPasos()" [orientation]="orientation">
+    <mat-step label="Cliente y marca" state="phone" class="pasos-mat-stepper">
         <div class="content-cliente-plantilla">
             <div class="cliente">
                 <h4>Seleccione un cliente</h4>

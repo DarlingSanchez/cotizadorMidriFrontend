@@ -39,3 +39,9 @@ input.ng-invalid.ng-touched {
 input.ng-valid.ng-touched {
     border: solid 2px rgb(42, 221, 26) !important;
 }
+
+@media (max-width:500px) {
+    .clientes-add-form .content {
+        grid-template-columns: 100%;
+    }
+}

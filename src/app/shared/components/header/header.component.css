@@ -29,3 +29,26 @@
 .user-content {
     margin: 0 auto;
 }
+
+.menu-hamburger.ng-star-inserted {
+    margin-left: 20px;
+}
+
+.menu-hamburger button {
+    border: none !important;
+    background-color: transparent !important;
+}
+
+button.mat-focus-indicator.cerrar-sesion.mat-menu-item.ng-tns-c42-3 {
+    margin-top: 30px;
+}
+
+button i {
+    padding-right: 10px;
+    font-size: 18px;
+    color: black !important;
+}
+
+.menu-hamburger button i.fa.fa-bars {
+    font-size: 20px !important;
+}
