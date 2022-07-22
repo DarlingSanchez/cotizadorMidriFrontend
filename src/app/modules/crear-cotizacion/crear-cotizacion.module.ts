@@ -14,6 +14,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {MatRadioModule} from '@angular/material/radio';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
+import { MatProgressBarModule} from '@angular/material/progress-bar'
 
 
 
@@ -37,7 +38,8 @@ import { MatTableModule } from '@angular/material/table';
     MatExpansionModule,
     MatRadioModule,
     MatPaginatorModule,
-    MatTableModule
+    MatTableModule,
+    MatProgressBarModule
   ]
 })
 export class CrearCotizacionModule { }

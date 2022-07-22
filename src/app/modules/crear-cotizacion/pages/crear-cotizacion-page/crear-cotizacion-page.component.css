@@ -297,6 +297,11 @@ table {
     width: 40%;
 }
 
+.progress-bar-content {
+    width: 80%;
+    margin-top: 50px;
+}
+
 @media (max-width:500px) {
     .content-cliente-plantilla {
         flex-direction: column;
@@ -317,5 +322,8 @@ table {
     }
     .mat-step-header {
         padding: 10px !important;
+    }
+    .table-media-mix td input {
+        width: 100%;
     }
 }

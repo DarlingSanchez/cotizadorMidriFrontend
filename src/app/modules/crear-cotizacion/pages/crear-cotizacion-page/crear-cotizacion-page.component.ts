@@ -38,6 +38,15 @@ import { environment } from 'src/environments/environment';
 })
 export class CrearCotizacionPageComponent implements OnInit,AfterViewInit{
 
+  progressBar:number = 0
+
+  setProgressBar(value:number):void{
+    this.progressBar = value;
+  }
+
+  getProgressBar():number{
+    return this.progressBar;
+  }
   //orientacion!:string;
   orientation!: StepperOrientation
   clienteSeleccionado:string = "";
@@ -346,6 +355,7 @@ codesClusterSelected:Array<any> = []
   }
   slide:any;
   constructor(private clientesService:ClientesService) { 
+    this.progressBar = 0;
     this.ngmodelMediaMix= ["awareness0","awareness1","awareness2","awareness3","awareness4","awareness5"];
   
     if(window.innerWidth>500){
@@ -577,6 +587,7 @@ codesClusterSelected:Array<any> = []
   }
 
   obtenerClusters():void{
+    console.time('loop');
     this.messageNotificacion = "CREANDO SLIDERS DE CLUSTERS SELECCIONADOS........";
      this.codesClusterSelected.forEach(element => {
            //CREO EL SLIDER
@@ -747,7 +758,7 @@ codesClusterSelected:Array<any> = []
       });
 
       this.crearTitleMediaMix();
-    
+      console.timeEnd('loop');
   }
 
   crearTitleMediaMix():void{
@@ -890,8 +901,8 @@ codesClusterSelected:Array<any> = []
     //AGREGO EL TITULO DEL MEDIA MIX
     this.slide.addText(arr?.nombreMediaMix, { x: 1.4, y: 0.4, w: 10, h:1.2, color: "ffffff", fontSize: 36, fontFace:"Calibri" });
 
-     //AGREGO LOGO MEDIA MIX GIF
-     this.slide.addImage({ path: "../../../../../assets/sliderCluster/logoMidriBlanco.png", x: 1.5, y: 2, w:2, h:1.8 });
+     //AGREGO LOGO MEDIA MIX GIF "../../../../../assets/preview/display-normal.gif"
+     this.slide.addImage({ path: arr.preview , x: 0.5, y: 1.7, w:3.25, h:4 });
 
      //AGREGO EL PARRAFO
     this.slide.addText(dataMediaMix.find(element => element.idMediaMix == id)?.descripcion, { x: 4.1, y: 2, w: 6.5, h:1.5, color: "ffffff", fontSize: 18, fontFace:"Calibri" });

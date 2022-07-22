@@ -9,6 +9,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { InjectSessionInterceptor } from './core/interceptores/inject-session.interceptor';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressBarModule} from '@angular/material/progress-bar'
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { MatMenuModule } from '@angular/material/menu';
     BrowserAnimationsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    MatMenuModule
+    MatMenuModule,
+    MatProgressBarModule
   ],
   providers: [
     CookieService,

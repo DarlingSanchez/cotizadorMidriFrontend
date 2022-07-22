@@ -4,6 +4,6 @@ export interface MediaMixModels {
     //ngmodel:string;
     nombreMediaMix:string;
     tarifa:number;
-
+    preview:string;
     
 }

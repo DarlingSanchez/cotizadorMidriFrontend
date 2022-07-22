@@ -8,11 +8,13 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
+import { DialogPreviewComponent } from './dialogpreview/dialog-preview/dialog-preview.component';
 
 
 @NgModule({
   declarations: [
-    ProductosPageComponent
+    ProductosPageComponent,
+    DialogPreviewComponent
   ],
   imports: [
     CommonModule,

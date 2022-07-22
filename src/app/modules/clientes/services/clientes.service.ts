@@ -23,7 +23,7 @@ export class ClientesService {
    getImagen():File{
     return this.imageName;
    }
-  
+   
   guardarCliente(data:any, image:any):Observable<any>{
       let body = new FormData;
       body.append('nombreEmpresa', data.empresa as any);
