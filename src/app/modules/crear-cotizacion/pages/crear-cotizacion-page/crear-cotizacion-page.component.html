@@ -1,6 +1,6 @@
 <h1>Crea una cotización</h1>
 
-<mat-stepper (selectionChange)="cambioPasos()" [orientation]="orientation">
+<mat-stepper (selectionChange)="cambioPasos()" [orientation]="orientation" #stepper>
     <mat-step label="Cliente y marca" state="phone" class="pasos-mat-stepper">
         <div class="content-cliente-plantilla">
             <div class="cliente">
@@ -162,6 +162,13 @@
             </div>
         </div>
 
+
+        <div class="message-notificacion" *ngIf="mostrarMsg">
+            <h2>{{messageNotificacion}}.....</h2>
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </div>
+
+
         <div class="content-button">
             <button class="button btn-segundo" mat-button matStepperPrevious>Anterior</button>
             <!-- <button class="button btn-segundo" mat-button (click)="stepper.reset()">Limpiar</button> -->
@@ -170,12 +177,8 @@
 
         </div>
 
-        <div class="message-notificacion" *ngIf="mostrarMsg">
-            <h2>{{messageNotificacion}}</h2>
-        </div>
-        <div class="progress-bar-content" *ngIf="progressBar!=0">
-            <mat-progress-bar mode="determinate" [value]="getProgressBar()"></mat-progress-bar>
-        </div>
+
+
     </mat-step>
 
 </mat-stepper>
@@ -190,15 +193,29 @@
     <div class="mat-elevation-z8">
         <table class="tableClusters" mat-table [dataSource]="clusters" matSort>
 
+            <!-- Checkbox Column -->
+            <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()">
+                    </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let element; let row">
+                    <!-- <mat-checkbox name="checkboxClusters" (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)" [id]="element.codigoCluster" class="checkbox{{element.tipoCluster}}">
+                    </mat-checkbox> -->
+                    <mat-checkbox name="checkbox{{element.tipoCluster}}" (click)="$event.stopPropagation()" (change)="selectedCheckBox($event); $event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)" id="{{element.codigoCluster}}-{{element.region}}"
+                        class="checkbox{{element.tipoCluster}}">
+                    </mat-checkbox>
+                </td>
+            </ng-container>
             <!-- Position Column -->
-            <ng-container matColumnDef="check">
+            <!-- <ng-container matColumnDef="check">
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let element">
                     <div class="form-check">
-                        <input name="checkboxClusters" type="checkbox" [id]="element.codigoCluster" class="checkbox{{element.tipoCluster}}">
+                        <input name="checkboxClusters" type="checkbox" class="checkbox{{element.tipoCluster}}">
                     </div>
                 </td>
-            </ng-container>
+            </ng-container> -->
 
             <!-- Symbol Column -->
             <ng-container matColumnDef="codigo">

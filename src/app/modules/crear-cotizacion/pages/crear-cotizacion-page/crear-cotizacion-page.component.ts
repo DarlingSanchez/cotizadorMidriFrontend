@@ -22,6 +22,12 @@ import { dataClusters2 } from 'src/app/data/clusters2';
 import { CrearCotizacionService } from '../../services/crear-cotizacion.service';
 import { ClientesService } from '@modules/clientes/services/clientes.service';
 import { environment } from 'src/environments/environment';
+import { map, Observable } from 'rxjs';
+import { HAMMER_LOADER } from '@angular/platform-browser';
+import { NgLocaleLocalization } from '@angular/common';
+import { SelectionModel } from '@angular/cdk/collections';
+import { Router } from '@angular/router';
+import { MatStepper } from '@angular/material/stepper';
 
 
 
@@ -38,6 +44,32 @@ import { environment } from 'src/environments/environment';
 })
 export class CrearCotizacionPageComponent implements OnInit,AfterViewInit{
 
+  selection = new SelectionModel<any>(true, []);
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.clusters.data.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    if(this.isAllSelected()){
+      this.selection.clear();
+      this.totalMediaMixAwareness=0;
+      this.totalMediaMixIntencion=0;
+      this.totalMediaMixInteres=0;
+    }else{
+      this.clusters.data.forEach(row => this.selection.select(row));
+      this.totalMediaMixAwareness=1;
+      this.totalMediaMixIntencion=1;
+      this.totalMediaMixInteres=1;
+    }
+    // this.isAllSelected() ?
+    //     this.selection.clear() :
+    //     this.clusters.data.forEach(row => this.selection.select(row));
+  }
   progressBar:number = 0
 
   setProgressBar(value:number):void{
@@ -91,7 +123,7 @@ activeMediaMixIntencion:boolean = false;
   objetivosGenerales:string = "";
 
   //CLUESTERS TABLE
-  displayedColumnsClusters: string[] = ['check','codigo','tipoCluster','nombre', 'nivel', 'usuarios', 'region'];
+  displayedColumnsClusters: string[] = ['select','codigo','tipoCluster','nombre', 'nivel', 'usuarios', 'region'];
   
   clusters!: MatTableDataSource<any>;
   clusters2!: Array<any>;
@@ -121,37 +153,92 @@ activeMediaMixIntencion:boolean = false;
   }
 
 codesClusterSelected:Array<any> = []
+
+totalMediaMixAwareness:number = 0;
+totalMediaMixInteres:number = 0;
+totalMediaMixIntencion:number = 0;
+
+selectedCheckBox(event:any):void{
+    
+
+    let idYregion = event.source.id.split('-');
+    console.log(idYregion[0], idYregion[1], event.source.id);
+    const indexOfObject = (id:number) => this.codesClusterSelected.findIndex(object => {
+      return object.codigoCluster === id;
+    });
+
+    if(event.checked){
+      if((event.source.name.toLowerCase()).trim() === "checkboxawareness"){
+        this.totalMediaMixAwareness++;
+      }else if((event.source.name.toLowerCase()).trim() === "checkboxinteres"){
+        this.totalMediaMixInteres++;
+      }else if((event.source.name.toLowerCase()).trim() === "checkboxintencion"){ //checkboxintencion
+        this.totalMediaMixIntencion++;
+      }
+      this.codesClusterSelected.push(dataClusters.find(element => (element.codigoCluster == parseInt(idYregion[0]) && element.region==idYregion[1])));
+      console.table(this.codesClusterSelected)
+    }else{
+      if((event.source.name.toLowerCase()).trim() === "checkboxawareness"){
+        this.totalMediaMixAwareness--;
+      }else if((event.source.name.toLowerCase()).trim() === "checkboxinteres"){
+        this.totalMediaMixInteres--;
+      }else if((event.source.name.toLowerCase()).trim() === "checkboxintencion"){ //checkboxintencion
+        this.totalMediaMixIntencion--;
+      }
+      this.codesClusterSelected.splice(indexOfObject(parseInt(event.source.id)), 1);
+    }
+
+    
+}
   cambioPasos():void{
 
-    this.activeMediaMixAwareness = false;
-       this.activeMediaMixInteres = false;
-       this.activeMediaMixIntencion = false;
+     this.activeMediaMixAwareness = false;
+     this.activeMediaMixInteres = false;
+     this.activeMediaMixIntencion = false;
   
-    this.codesClusterSelected = []
+    // this.codesClusterSelected = []
        
-    let checkedBoxesCluster = document.querySelectorAll('input[name=checkboxClusters]:checked');
+    // let checkedBoxesCluster = document.querySelectorAll('.mat-checkbox input:checked');
+    // //let checkedBoxesCluster = document.querySelectorAll('input[name=checkboxClusters]:checked');
   
-     for (var i = 0; i < checkedBoxesCluster.length; i++) {
-       let ide = checkedBoxesCluster[i].id;
-       let clase = checkedBoxesCluster[i].className;
+    //  for (var i = 0; i < checkedBoxesCluster.length; i++) {
+      
+    //    let ide = checkedBoxesCluster[i].id;
+    //    let ideClean = ide.split('-').shift();
+    //    let className = document.getElementById(ideClean || " ");
+    //    //let clase = checkedBoxesCluster[i].className; opcion vieja con input checkbox puro
+    //    let clase  = className?.className.split(' ')[2] || "";
 
        
 
-       if((clase.toLowerCase()).trim() === "checkboxawareness"){
-          this.activeMediaMixAwareness = true;
-       }else if((clase.toLowerCase()).trim() === "checkboxinteres"){
-          this.activeMediaMixInteres= true;
-       }else if((clase.toLowerCase()).trim() === "checkboxintencion"){ //checkboxintencion
-          this.activeMediaMixIntencion = true;
-       }
-       //console.log(clase.toLowerCase().trim());
-       //console.table(ide);
-       //this.codesClusterSelected.push(ide);
-       //this.codesClusterSelected = dataClusters.filter(data => data.codigoCluster== parseInt(ide));
-       this.codesClusterSelected.push(dataClusters.find(element => element.codigoCluster == parseInt(ide)));
-     }
-     //console.table(this.codesClusterSelected);
+    //    console.log(ideClean, clase);
+
+    //   //  if((clase.toLowerCase()).trim() === "checkboxawareness"){
+    //   //     this.activeMediaMixAwareness = true;
+    //   //  }else if((clase.toLowerCase()).trim() === "checkboxinteres"){
+    //   //     this.activeMediaMixInteres= true;
+    //   //  }else if((clase.toLowerCase()).trim() === "checkboxintencion"){ //checkboxintencion
+    //   //     this.activeMediaMixIntencion = true;
+    //   //  }
+    //    //console.log(clase.toLowerCase().trim());
+    //    //console.table(ide);
+    //    //this.codesClusterSelected.push(ide);
+    //    //this.codesClusterSelected = dataClusters.filter(data => data.codigoCluster== parseInt(ide));
+    //    this.codesClusterSelected.push(dataClusters.find(element => element.codigoCluster == parseInt(ide)));
+    //  }
+    
+    //  console.log(this.totalMediaMixAwareness, this.totalMediaMixIntencion, this.totalMediaMixInteres)
      //console.log(this.codesClusterSelected.length)
+
+     if(this.totalMediaMixAwareness>0){
+         this.activeMediaMixAwareness = true;
+      }
+      if(this.totalMediaMixInteres>0){
+         this.activeMediaMixInteres= true;
+      }
+      if(this.totalMediaMixIntencion>0){ //checkboxintencion
+         this.activeMediaMixIntencion = true;
+      }
  
   }
 
@@ -354,7 +441,7 @@ codesClusterSelected:Array<any> = []
     }
   }
   slide:any;
-  constructor(private clientesService:ClientesService) { 
+  constructor(private clientesService:ClientesService, private router:Router) { 
     this.progressBar = 0;
     this.ngmodelMediaMix= ["awareness0","awareness1","awareness2","awareness3","awareness4","awareness5"];
   
@@ -422,6 +509,7 @@ codesClusterSelected:Array<any> = []
   pres:any
   
   crearPptx():void{
+    
     this.pres = new pptxgen();
     this.mostrarMsg = true;
     this.pres.defineLayout({ name:'A3', width:13, height:7.5 });
@@ -432,6 +520,7 @@ codesClusterSelected:Array<any> = []
 
     //AGREGAR SLIDERS DE OBJETIVO GENERAL
     //this.obtenerObjetivos();
+    
     
   }
   setLogoCliente():void{
@@ -587,9 +676,11 @@ codesClusterSelected:Array<any> = []
   }
 
   obtenerClusters():void{
-    console.time('loop');
+    let totalClusters = 0;
     this.messageNotificacion = "CREANDO SLIDERS DE CLUSTERS SELECCIONADOS........";
      this.codesClusterSelected.forEach(element => {
+
+      totalClusters++;
            //CREO EL SLIDER
         this.slide = this.pres.addSlide();
       
@@ -756,9 +847,9 @@ codesClusterSelected:Array<any> = []
            
          });
       });
-
+console.log("Total clusters ",totalClusters);
       this.crearTitleMediaMix();
-      console.timeEnd('loop');
+     
   }
 
   crearTitleMediaMix():void{
@@ -772,6 +863,7 @@ codesClusterSelected:Array<any> = []
   }
 
   obtenerMediaMix():void{
+    
     this.messageNotificacion = "CREANDO SLIDERS DE LOS MEDIA MIX........";
     let inputTotal = document.getElementsByClassName("media-mix-input");
 
@@ -806,7 +898,7 @@ codesClusterSelected:Array<any> = []
       tamanoLetra = 9;
       altoFila = 0.25;
     }
-    
+    let totalMediaMix = 0
      for (let index = 0; index < inputTotal.length; index++) {
        const filterValue = (inputTotal[index] as HTMLInputElement).value;
        const filterId = (inputTotal[index] as HTMLInputElement).id;
@@ -814,6 +906,7 @@ codesClusterSelected:Array<any> = []
        if(!isNaN(parseFloat(filterValue))){
          //console.log(filterId + " " + filterValue);  
          totalFilas++;
+         totalMediaMix++;
          let id = filterId.replace('-input','');
          let arr = dataMediaMix.find(element => element.idMediaMix == id)
          this.cargarMediaMix(id, parseFloat(filterValue), arr);
@@ -832,7 +925,7 @@ codesClusterSelected:Array<any> = []
        }
     
      }
-    
+    console.log("totalMediaMix",totalMediaMix)
     let subTotal:HTMLSpanElement = <HTMLSpanElement>document.getElementById('sub-total-total');
     let descuento:HTMLSpanElement = <HTMLSpanElement>document.getElementById('descuento-total');
     let selectDescuento:HTMLSelectElement =<HTMLSelectElement>document.getElementById("descuentosOPSA");
@@ -882,6 +975,7 @@ codesClusterSelected:Array<any> = []
     this.graficoResumen();
     this.tablaResumen(tablaResumenMediaMix, altoFila);
     //console.table(totalMediaMixSelected)
+
   }
   calcularTarifa(valor:number, tarifa:number):number{
     return valor * tarifa;
@@ -1009,10 +1103,33 @@ codesClusterSelected:Array<any> = []
 
     this.descargarPptx();
   }
-
+  
   descargarPptx():void{
-    this.messageNotificacion = "DESCARGANDO PRESENTACIÓN...";
-    this.pres.writeFile({ fileName: 'PROPUESTA MIDRI.pptx',  });
-    this.mostrarMsg = false;
+    this.messageNotificacion = "GENERANDO PRESENTACIÓN...";
+    let fileName = "PROPUESTA MIDRI.pptx";
+    this.pres.writeFile({ fileName: 'PROPUESTA MIDRI.pptx'})
+        .then(() => {
+          console.log(`created file: ${fileName}`);
+          this.messageNotificacion = "DESCARGANDO PRESENTACIÓN...";
+
+          setTimeout(() => {
+            this.mostrarMsg = false;
+            //this.router.navigate(["/crear-cotizacion"]);
+            this.limpiarTodo();
+          }, 3000);
+          
+        })
+        
+    
+    
   }
+  @ViewChild('stepper',{read:MatStepper}) stepper!:MatStepper;
+  limpiarTodo():void{
+      this.stepper.reset();
+      this.selection.clear();
+      this.totalMediaMixAwareness=0;
+      this.totalMediaMixIntencion=0;
+      this.totalMediaMixInteres=0;
+  }  
+
 }
