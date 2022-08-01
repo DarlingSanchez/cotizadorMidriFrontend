@@ -14,6 +14,8 @@ import { Dialog } from '@angular/cdk/dialog';
 import { ClientesService } from '@modules/clientes/services/clientes.service';
 import { environment } from 'src/environments/environment';
 import { DialogEditClienteComponent } from '../../dialog/dialog-edit-cliente/dialog-edit-cliente.component';
+import { Router } from '@angular/router';
+import { CheckSessionService } from '@core/checkSession/check-session.service';
 
 export interface DialogData {
   animal: 'panda' | 'unicorn' | 'lion';
@@ -34,6 +36,10 @@ export class ClientesPageComponent implements  AfterViewInit {
   dialogEdit!: MatDialogRef<any>
 
   agregarCliente() {
+
+    if(this.checkSesion.checkCookieSession()){
+ 
+    
     this.dialogRef =  this.dialog.open(DialogClientesComponent,{width:"80%"});
 
     
@@ -56,7 +62,10 @@ export class ClientesPageComponent implements  AfterViewInit {
         } catch (error) {
         
         }  
-    })    
+    }) 
+  }else{
+    this.router.navigate(['/','login']);
+  }
   }
 
 dataEditCliente:any = {}
@@ -70,11 +79,13 @@ getId():number{
 }
 
   editarCliente(id:number) {
+    if(this.checkSesion.checkCookieSession()){
     this.setId(id);
      this.clientesService.getCliente$(id)
      .subscribe((cliente=>{   //ME SUSCRIBO PARA OBTENER EL CLIENTE DEL ID ENVIADO   
        this.dataEditCliente = cliente;
      }))
+     
 
      setTimeout(() => {
       this.dialogEdit =  this.dialog.open(DialogEditClienteComponent,
@@ -116,9 +127,11 @@ getId():number{
         
        }        
       }) 
-    }, 500)
+    }, 1500)
    
-        
+    }else{
+      this.router.navigate(['/','login']);
+    }    
   }
   
 
@@ -129,7 +142,7 @@ getId():number{
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  constructor(public dialog: MatDialog, private message:MatSnackBar, private clientesService:ClientesService) { 
+  constructor(public dialog: MatDialog, private message:MatSnackBar, private clientesService:ClientesService, private router:Router, private checkSesion:CheckSessionService) { 
     const {dataClientes}:any = (dataRow as any).default
 
     

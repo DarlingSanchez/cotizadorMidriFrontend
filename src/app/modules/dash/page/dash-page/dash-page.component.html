@@ -12,23 +12,13 @@
 
     <div class="content">
         <div *ngFor="let data of navData; index as i" class="button-content">
-            <button [routerLink]="data.router">{{data.name}}
+            <button [name]="data.router" (click)="obBack($event)">{{data.name}}
                 <i [class]="data.icon"></i>
             </button>
         </div>
         <!-- <div class="button-content btn2">
             <button [routerLink]="'/productos'">Productos
                 <i class="fa-box-open fal"></i>
-            </button>
-        </div>
-        <div class="button-content btn3">
-            <button [routerLink]="'/crear-cotizacion'">Crear Cotización
-                <i class="fa fa-file"></i>
-            </button>
-        </div>
-        <div class="button-content btn4">
-            <button [routerLink]="'/ver-cotizaciones'">Ver Cotizaciones
-                <i class="fa fa-th"></i>
             </button>
         </div> -->
     </div>

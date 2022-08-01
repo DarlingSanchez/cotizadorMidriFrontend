@@ -16,7 +16,9 @@
             <!-- Name Column -->
             <ng-container matColumnDef="nombreMediaMix">
                 <th mat-header-cell *matHeaderCellDef> Media Mix </th>
-                <td mat-cell *matCellDef="let element"> {{element.nombreMediaMix}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.nombreMediaMix}}
+                    <input id="{{element.idMediaMix}}-nombre" type="hidden" value="{{element.nombreMediaMix}}">
+                </td>
             </ng-container>
 
             <!-- Weight Column -->
@@ -35,9 +37,11 @@
             <ng-container matColumnDef="preview">
                 <th mat-header-cell *matHeaderCellDef> Preview </th>
                 <td mat-cell *matCellDef="let element">
-                    <button class="button btn-tercero">
+                    <button [id]="element.idMediaMix" class="button btn-tercero" (click)="previewProduct($event)">
                         <i class="fa fa-eye" aria-hidden="true"></i>
                     </button>
+                    <input id="{{element.idMediaMix}}-descripcion" type="hidden" value="{{element.descripcion}}">
+                    <input id="{{element.idMediaMix}}-preview" type="hidden" value="{{element.preview}}">
                 </td>
             </ng-container>
 

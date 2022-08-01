@@ -28,6 +28,7 @@ import { NgLocaleLocalization } from '@angular/common';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Router } from '@angular/router';
 import { MatStepper } from '@angular/material/stepper';
+import { CheckSessionService } from '@core/checkSession/check-session.service';
 
 
 
@@ -191,6 +192,10 @@ selectedCheckBox(event:any):void{
     
 }
   cambioPasos():void{
+
+    if(!this.checkSesion.checkCookieSession()){
+      this.router.navigate(['/','login']);
+    }
 
      this.activeMediaMixAwareness = false;
      this.activeMediaMixInteres = false;
@@ -441,7 +446,7 @@ selectedCheckBox(event:any):void{
     }
   }
   slide:any;
-  constructor(private clientesService:ClientesService, private router:Router) { 
+  constructor(private clientesService:ClientesService, private router:Router, private checkSesion:CheckSessionService) { 
     this.progressBar = 0;
     this.ngmodelMediaMix= ["awareness0","awareness1","awareness2","awareness3","awareness4","awareness5"];
   

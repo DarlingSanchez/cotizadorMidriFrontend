@@ -9,6 +9,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
 import { DialogPreviewComponent } from './dialogpreview/dialog-preview/dialog-preview.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { DialogPreviewComponent } from './dialogpreview/dialog-preview/dialog-pr
     MatPaginatorModule,
     MatTableModule,
     MatSortModule,
-    MatInputModule
+    MatInputModule,
+    MatDialogModule
   ]
 })
 export class ProductosModule { }

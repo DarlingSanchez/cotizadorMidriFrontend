@@ -7,9 +7,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class VerCotizacionesPageComponent implements OnInit {
 
+  cotizaciones:Array<any>= []
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  applyFilter(event:any){}
 }

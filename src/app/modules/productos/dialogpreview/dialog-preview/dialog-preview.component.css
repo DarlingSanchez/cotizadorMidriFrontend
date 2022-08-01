@@ -1,0 +1,40 @@
+.container {
+    display: flex;
+}
+
+.content-gif {
+    width: 40%;
+}
+
+.content-gif img {
+    width: 100%;
+}
+
+.content-text {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+}
+
+.content-text p {
+    font-size: 22px;
+    margin-top: 10px;
+}
+
+@media (max-width:821px) {
+    .container {
+        flex-direction: column-reverse;
+    }
+    .content-text {
+        width: 100%;
+    }
+    .content-gif {
+        width: 50%;
+        margin: 0 auto;
+    }
+    .content-text p {
+        font-size: 18px;
+        margin-top: 10px;
+    }
+}

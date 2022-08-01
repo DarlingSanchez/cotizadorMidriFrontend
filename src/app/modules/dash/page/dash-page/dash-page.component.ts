@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { UntypedFormArray } from '@angular/forms';
+import { Router } from '@angular/router';
 import { navbarData } from '@shared/components/sidenav/side-nav/dataNav';
+import { CheckSessionService } from '../../../../core/checkSession/check-session.service';
 
 @Component({
   selector: 'app-dash-page',
@@ -16,7 +19,7 @@ export class DashPageComponent implements OnInit {
 
   navData = navbarData;
   cont:number = 0;
-  constructor() { }
+  constructor(private router:Router, private checkSesion:CheckSessionService) { }
 
   ngOnInit(): void {
     this.dia = this.fecha.getDate();
@@ -24,4 +27,17 @@ export class DashPageComponent implements OnInit {
     this.anio = this.fecha.getFullYear();
   }
 
+  obBack(event:any):void{
+      
+      let ruta = event.target.name.split(',')
+      
+      if(this.checkSesion.checkCookieSession()){
+        this.router.navigate(ruta);
+      }else{
+        this.router.navigate(['/','login']);
+      }
+      
+  }
+
 }
+
