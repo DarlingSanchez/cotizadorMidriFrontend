@@ -1194,6 +1194,11 @@ selectedCheckBox(event:any):void{
         
       });
       this.codesClusterSelected = [];
+      this.labels = []
+      this.values =[]
+      totalUsuarios = 0;
+
+      position = 2.3;
   }
 
   tablaResumen(tablaResumenMediaMix:any , altoFila:number):void{
@@ -1247,6 +1252,8 @@ selectedCheckBox(event:any):void{
       this.totalMediaMixAwareness=0;
       this.totalMediaMixIntencion=0;
       this.totalMediaMixInteres=0;
+
+      console.table(this.codesClusterSelected)
   }  
 
 }
