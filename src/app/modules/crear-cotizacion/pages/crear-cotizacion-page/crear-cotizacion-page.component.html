@@ -10,8 +10,9 @@
                    {{dato.nombreEmpresa}}
                </option>
               </select>
-                <img [src]="getLogocliente()" alt="Logo del cliente" width="100">
+                <img id="logo-cliente" [src]="getLogocliente()" alt="Logo del cliente" width="100">
             </div>
+
             <div class="plantilla">
                 <h4>Seleccione una marca</h4>
                 <mat-button-toggle-group name="fontStyle" aria-label="Font Style" class="botones-fondos" (change)="definirFondos($event)">
@@ -280,10 +281,11 @@
             </mat-panel-description>
         </mat-expansion-panel-header>
         <mat-radio-group aria-label="Select an option" class="objetivos-radio-group" (change)="obtenerObjetivos($event)">
-            <mat-radio-button class="objetivos-radio-button" [value]="data.id" *ngFor="let data of objetivos" [checked]="data.active">
+            <mat-radio-button class="objetivos-radio-button" [value]="data.id" *ngFor="let data of objetivos" [checked]="data.id==1 ? true: false">
                 {{data.nombreObjetivo}}
             </mat-radio-button>
-            <mat-radio-button class="objetivos-radio-button" id="custom-objetivo" value="5">
+            <mat-radio-button class="objetivos-radio-button" id="custom-objetivo" value="1000">
+                <!--LE ASIGNO VALUE 1000 PORQUE EL NUMERO DE OBJETIVOS NO LLEGARA A MIL-->
                 <!-- <input class="input-custom" type="texttarea" name="" id=""> -->
                 <textarea name="" id="text-custom-objetivo" cols="30" rows="10"></textarea>
             </mat-radio-button>

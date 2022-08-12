@@ -27,6 +27,11 @@ table {
     margin-left: 50px;
 }
 
+img.logo-cliente {
+    width: 100px;
+    height: auto;
+}
+
 @media (max-width:500px) {
     .header {
         flex-direction: column;

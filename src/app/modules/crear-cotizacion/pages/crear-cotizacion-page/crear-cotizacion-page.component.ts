@@ -29,6 +29,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Router } from '@angular/router';
 import { MatStepper } from '@angular/material/stepper';
 import { CheckSessionService } from '@core/checkSession/check-session.service';
+import { ObjetivosService } from '@modules/crear-cotizacion/services/objetivos.service';
 
 
 
@@ -123,6 +124,13 @@ activeMediaMixIntencion:boolean = false;
   objetivos:ObjetivosModels[]=[]
   objetivosGenerales:string = "";
 
+  setObjetivosGenerales(objetivo:string):void{
+      this.objetivosGenerales = objetivo;
+  }
+  getObjetivosGenerales():string{
+    return this.objetivosGenerales;
+  }
+
   //CLUESTERS TABLE
   displayedColumnsClusters: string[] = ['select','codigo','tipoCluster','nombre', 'nivel', 'usuarios', 'region'];
   
@@ -163,7 +171,7 @@ selectedCheckBox(event:any):void{
     
 
     let idYregion = event.source.id.split('-');
-    console.log(idYregion[0], idYregion[1], event.source.id);
+    //console.log(idYregion[0], idYregion[1], event.source.id);
     const indexOfObject = (id:number) => this.codesClusterSelected.findIndex(object => {
       return object.codigoCluster === id;
     });
@@ -177,7 +185,7 @@ selectedCheckBox(event:any):void{
         this.totalMediaMixIntencion++;
       }
       this.codesClusterSelected.push(dataClusters.find(element => (element.codigoCluster == parseInt(idYregion[0]) && element.region==idYregion[1])));
-      console.table(this.codesClusterSelected)
+      //console.table(this.codesClusterSelected)
     }else{
       if((event.source.name.toLowerCase()).trim() === "checkboxawareness"){
         this.totalMediaMixAwareness--;
@@ -342,8 +350,8 @@ selectedCheckBox(event:any):void{
     let resultado = valor1*valor2;
     return Intl.NumberFormat().format(resultado);
   }
-  calculoImpresiones(valor1:number, valor2:number):string{
-    let resultado = valor1*valor2*1000;
+  calculoImpresiones(valor1:number, costoPorImpresion:number):string{
+    let resultado = costoPorImpresion*1000;
     return Intl.NumberFormat().format(resultado);
   }
 
@@ -446,7 +454,7 @@ selectedCheckBox(event:any):void{
     }
   }
   slide:any;
-  constructor(private clientesService:ClientesService, private router:Router, private checkSesion:CheckSessionService) { 
+  constructor(private clientesService:ClientesService, private router:Router, private checkSesion:CheckSessionService, private objetivosService:ObjetivosService) { 
     this.progressBar = 0;
     this.ngmodelMediaMix= ["awareness0","awareness1","awareness2","awareness3","awareness4","awareness5"];
   
@@ -469,13 +477,26 @@ selectedCheckBox(event:any):void{
         this.intencion.push(element);
       }
     });
+
+    this.objetivosService.getObjetivos$()
+    .subscribe((data=>{
+      this.objetivos= data;  
+      //console.log(typeof(dataObjetivos))    
+      //OBJETIVO POR DEFAULT
+      let objetivos = data.find((element: { id: number; }) => element.id == 1)?.nombreObjetivo || "";
+      this.setObjetivosGenerales(objetivos);
+      //console.log(this.objetivosGenerales)
+    }))
     
-    //OBJETIVO POR DEFAULT
-    this.objetivosGenerales = dataObjetivos.find(element => element.id == 1)?.nombreObjetivo || "";
+    
 
     //BACKGROUND POR DEFAULT
-    this.background = "../../../../../assets/fondos/fondo.png";
-   
+    let fondo = "../../../../../assets/presentacion/opsa/negro/fondoNegro.png";
+    this.setFondoPptx(fondo);
+    this.setPathFondo("opsa/negro");
+    this.setColorFuente("FFFFFF");
+    this.marcas = dataMarcasOpsa;
+    
   }
 
   ngOnInit(): void {
@@ -492,8 +513,7 @@ selectedCheckBox(event:any):void{
     
     this.definirFondos({value:0});
     //this.fondos = dataFondos;
-    this.marcas = dataMarcasOpsa;
-    this.objetivos= dataObjetivos;
+    
   }
   ngAfterViewInit() {
     this.clusters.paginator = this.paginator;
@@ -509,6 +529,31 @@ selectedCheckBox(event:any):void{
     }
   }
 
+  fondoPptx:string =""
+  pathFondo:string =""
+  colorFuente:string=""
+
+  //GET Y SET DE LA URL COMPLETA DEL FONDO
+  setFondoPptx(fondo:string):void{
+    this.fondoPptx = fondo;
+  }
+  getFondoPptx():string{
+    return this.fondoPptx;
+  }
+  //GET Y SET DEL NOMBRE DEL FONDO
+  setPathFondo(fondo:string):void{
+    this.pathFondo = fondo;
+  }
+  getPathFondo():string{
+    return this.pathFondo;
+  }
+  //GET Y SET DEL COLOR DE LA FUENTE
+  setColorFuente(color:string):void{
+    this.colorFuente = color;
+  }
+  getColorFuente():string{
+    return this.colorFuente;
+  }
         //CREAR PPTX
   // 1. Crea nueva presentacion
   pres:any
@@ -535,11 +580,14 @@ selectedCheckBox(event:any):void{
      .subscribe((cliente=>{   //ME SUSCRIBO PARA OBTENER EL CLIENTE DEL ID ENVIADO   
       this.clienteSeleccionado = cliente.logo
      }))
+    
+   
   }
   getLogocliente():string{
     //console.log(this.URL + this.clienteSeleccionado)
     return this.URL + this.clienteSeleccionado;
   }
+
   obtenerSliderPrincipal():void{ //SLIDER PRINCIPAL 
 
     this.messageNotificacion = "CREANDO SLIDER PRINCIPAL........";
@@ -547,7 +595,7 @@ selectedCheckBox(event:any):void{
     this.slide = this.pres.addSlide();
 
     //AGREGO FONDO NEGRO CON LOGO MIDRI Y OPSA BLANCOS
-    this.slide.background = { path: "../../../../../assets/fondos/fondoNegro.png" };
+    this.slide.background = { path: this.getFondoPptx() };
     
     //AGREGO FONDO
     //this.slide.background = { color:"000000" };
@@ -558,32 +606,69 @@ selectedCheckBox(event:any):void{
     //AGREGO LOGO OPSA
     //this.slide.addImage({ path: "../../../../../assets/imgSliderPrincipal/Logo-OPSABlanco.png", x: 11.3, y: 6.7, w:1.4, h:0.5});
 
-      
+    let colorFuente = this.getColorFuente();
    
 
-    this.slide.addText("SOLUCION DE MARKETING DIGITAL", { x: 0, y: 3.5, w: 13, h:1, color: "ffffff", fontSize: 36, fontFace:"Barlow SemiBold", align: "center" });
+    this.slide.addText("SOLUCION DE MARKETING DIGITAL", { x: 0, y: 3.5, w: 13, h:1, color: colorFuente, fontSize: 36, fontFace:"Barlow SemiBold", align: "center" });
 
-    this.slide.addText("ENCONTRANDO SU CLIENTE TARGET", { x: 0, y: 4, w: 13, h:1, color: "ffffff", fontSize: 20, fontFace:"Barlow SemiBold", align: "center" });
+    this.slide.addText("ENCONTRANDO SU CLIENTE TARGET", { x: 0, y: 4, w: 13, h:1, color: colorFuente, fontSize: 20, fontFace:"Barlow SemiBold", align: "center" });
 
      //AGREGO LOGO MIDRI
      this.slide.addImage({ path: "../../../../../assets/imgSliderPrincipal/logoMidri.png", x:6, y: 5, w:1.2, h:1 });
 
+     let ancho = 3;
+     let alto = this.getMedidasLogo();
+
+     let posicionX = 5;
+
+     if(ancho==alto){
+        ancho = 2
+        alto = 2
+        posicionX = 5.5
+     }
      //AGREGO LOGO DEL CLIENTE
-     this.slide.addImage({ path: this.getLogocliente(), x: 5, y: 1.2, sizing: { type: "contain", w: 3, h: 2 } });
-     //this.slide.addImage({ path: "../../../../../assets/imgSliderPrincipal/logoMidri.png", x: 5, y: 2.5, w:3.3, h:0.7 });
+     //this.slide.addImage({ path: this.getLogocliente(), x: 5, y: 1.2, w:5.0, h:2.5, sizing: { type: "contain", w: 4.72, h: 1.61 } });
+     this.slide.addImage({ path: this.getLogocliente(), x: posicionX, y: 1, w: ancho, h: alto });
    
 
       this.crearPresentacionMidri();
   }
 
+  anchoImg:number = 0
+  altoImg:number = 0
+  relacionAspecto:number = 0
+
+  getMedidasLogo():number{
+    let imagen = document.getElementById("logo-cliente")?.getAttribute('src') || "";
+
+    let img = new Image();
+
+    img.src = imagen;
+
+    this.anchoImg = img.width;
+    this.altoImg = img.height;
+
+    this.relacionAspecto = this.anchoImg / this.altoImg;
+
+    let newH = 270 / this.relacionAspecto;
+
+    //console.log(270, newH)
+    //console.log(270/90, newH/90)
+
+    return newH/90;
+  }
+
   //SLIDER DE PRESENTACION
   crearPresentacionMidri():void{
 
+    //OBTENGO SLIDER PRINCIPAL PARA SACAR VARIABLES
+
+    
     //CREO EL SLIDER DE PRESENTACION
     this.slide = this.pres.addSlide();
     
     //AGREGO FONDO NEGRO CON LOGO MIDRI Y OPSA BLANCOS
-    this.slide.background = { path: "../../../../../assets/presentacion/queesMidri.png" };
+    this.slide.background = { path: `../../../../../assets/presentacion/${this.getPathFondo()}/queesMidri.png` };
    
   
     //AGREGO TITULO
@@ -603,7 +688,7 @@ selectedCheckBox(event:any):void{
     this.slide = this.pres.addSlide();
     
     //AGREGO FONDO NEGRO CON LOGO MIDRI Y OPSA BLANCOS
-    this.slide.background = { path: "../../../../../assets/presentacion/agrupaUsuarios.png" };
+    this.slide.background = { path: `../../../../../assets/presentacion/${this.getPathFondo()}/agrupaUsuarios.png` };
 
     this.crearFunel();
   }
@@ -613,34 +698,33 @@ selectedCheckBox(event:any):void{
     this.slide = this.pres.addSlide();
     
     //AGREGO FONDO NEGRO CON LOGO MIDRI Y OPSA BLANCOS
-    this.slide.background = { path: "../../../../../assets/presentacion/funel.png" };
+    this.slide.background = { path: `../../../../../assets/presentacion/${this.getPathFondo()}/funel.png` };
 
     this.crearSliderObjetivos();
   }
   
   //SLIDER OBJETIVOS GENERALES
   crearSliderObjetivos():void{
-    this.messageNotificacion = "CREANDO SLIDER DE OBJETIVOS GENERALES........";
-    if(this.objetivosGenerales ==="custom-objetivo"){
-      let custom:HTMLTextAreaElement = <HTMLTextAreaElement>document.getElementById('text-custom-objetivo');
-      this.objetivosGenerales = custom.value;
-    }else if(this.objetivosGenerales ===""){
-        this.objetivosGenerales = dataObjetivos.find(element => element.id == 1)?.nombreObjetivo || "";
-    }
+    // this.messageNotificacion = "CREANDO SLIDER DE OBJETIVOS GENERALES........";
+      if(this.objetivosGenerales ==="custom-objetivo"){
+        let custom:HTMLTextAreaElement = <HTMLTextAreaElement>document.getElementById('text-custom-objetivo');
+        this.setObjetivosGenerales(custom.value);
+      }
      //CREO EL SLIDER DE OBJETIVOS
      this.slide = this.pres.addSlide();
 
      //AGREGO FONDO
-     this.slide.background = { path: "../../../../../assets/fondos/fondoNegro.png" };
+     this.slide.background = { path: this.getFondoPptx() };
 
      //AGREGO LOGO DE OBJETIVOS
      this.slide.addImage({ path: "../../../../../assets/img/objetivos.png", x: 4.6, y: 2.5, w:3, h:3 });
 
+     let colorFuente = this.getColorFuente();
      //AGREGO TITULO
-    this.slide.addText("OBJETIVO DE LA SOLUCION DIGITAL", { x: 0.6, y: 0.6, w: 10, h:0.5, color: "ffffff", fontSize: 28, fontFace:"Barlow SemiBold" });
+    this.slide.addText("OBJETIVO DE LA SOLUCION DIGITAL", { x: 0.6, y: 0.6, w: 10, h:0.5, color: colorFuente, fontSize: 28, fontFace:"Barlow SemiBold" });
 
     //AGREGO DESCRIPCION
-    this.slide.addText(this.objetivosGenerales, { x: 0.6, y: 1.2, w: 12, h:1.4, color: "ffffff", fontSize: 18, fontFace:"Calibri"});
+    this.slide.addText(this.getObjetivosGenerales(), { x: 0.6, y: 1.2, w: 12, h:1.4, color: colorFuente, fontSize: 18, fontFace:"Calibri"});
 
     this.crearTitleCluester();
   }
@@ -650,7 +734,7 @@ selectedCheckBox(event:any):void{
     this.slide = this.pres.addSlide();
     
     //AGREGO FONDO NEGRO CON LOGO MIDRI Y OPSA BLANCOS
-    this.slide.background = { path: "../../../../../assets/presentacion/clusterImpactar.png" };
+    this.slide.background = { path: `../../../../../assets/presentacion/${this.getPathFondo()}/clusterImpactar.png` };
 
     this.obtenerClusters();
   }
@@ -661,19 +745,41 @@ selectedCheckBox(event:any):void{
  
   obtenerObjetivos(event:any):void{
     let {value} = event;
-    if(value<4){
-      this.objetivosGenerales =  dataObjetivos.find(element => element.id == value)?.nombreObjetivo || "";
-    }else{      
-      this.objetivosGenerales = "custom-objetivo";    
-    }
-    
+ 
+    //console.log(value, typeof(value))
+        this.objetivosService.getObjetivo$(value)
+        .subscribe((objetivo=>{          
+          this.setObjetivosGenerales(objetivo.nombreObjetivo);
+        }), error=>{
+          this.setObjetivosGenerales("custom-objetivo");  
+          //console.log("objetivo", error)
+        })
+
+    // if(value<4){
+      
+        
+    //   this.objetivosGenerales =  dataObjetivos.find(element => element.id == value)?.nombreObjetivo || "";
+    // }else{      
+    //   this.objetivosGenerales = "custom-objetivo";    
+    // }
+    //console.log(this.getObjetivosGenerales())
+   
   }
   obtenerBackground(event:any):void{
     let {value, source} = event
       //console.log(source.id);
       //console.log(document.getElementById(source.id)?.getElementsByClassName('img-fondo')[0].getAttribute('src'))
       //console.table(event)
-      this.background = document.getElementById(source.id)?.getElementsByClassName('img-fondo')[0].getAttribute('src') || "../../../../../assets/fondos/fondo.png"
+      let fondo = document.getElementById(source.id)?.getElementsByClassName('img-fondo')[0].getAttribute('src') || "../../../../../assets/presentacion/opsa/negro/fondoNegro.png"
+      this.setFondoPptx(fondo);   
+      let path = fondo.split('/');
+
+      this.setPathFondo(`${path[4]}/${path[5]}`);
+      if(path[5]=="negro"){
+        this.setColorFuente("FFFFFF");
+      }else if(path[5]=="blanco"){
+        this.setColorFuente("000000");
+      }
   }
 
   covertirPorcentaje(valor:number):number{
@@ -852,7 +958,7 @@ selectedCheckBox(event:any):void{
            
          });
       });
-console.log("Total clusters ",totalClusters);
+//console.log("Total clusters ",totalClusters);
       this.crearTitleMediaMix();
      
   }
@@ -862,7 +968,7 @@ console.log("Total clusters ",totalClusters);
     this.slide = this.pres.addSlide();
     
     //AGREGO FONDO NEGRO CON LOGO MIDRI Y OPSA BLANCOS
-    this.slide.background = { path: "../../../../../assets/presentacion/mediaMix.png" };
+    this.slide.background = { path: `../../../../../assets/presentacion/${this.getPathFondo()}/mediaMix.png` };
 
     this.obtenerMediaMix();
   }
@@ -907,8 +1013,10 @@ console.log("Total clusters ",totalClusters);
      for (let index = 0; index < inputTotal.length; index++) {
        const filterValue = (inputTotal[index] as HTMLInputElement).value;
        const filterId = (inputTotal[index] as HTMLInputElement).id;
+
+       let valueInput = parseFloat(filterValue);
     
-       if(!isNaN(parseFloat(filterValue))){
+       if(!isNaN(valueInput) && valueInput>0){
          //console.log(filterId + " " + filterValue);  
          totalFilas++;
          totalMediaMix++;
@@ -917,20 +1025,20 @@ console.log("Total clusters ",totalClusters);
          this.cargarMediaMix(id, parseFloat(filterValue), arr);
       
          totalInversion += parseFloat(filterValue);
-         let entregable = this.calcularTarifa(parseFloat(filterValue), arr?.tarifa || 1);
+         let tarifa = this.calcularTarifa(parseFloat(filterValue), arr?.tarifa || 1);
          //LLENAR TABLA RESUMEN
          tablaResumenMediaMix.push(
            [
-             {text:arr?.nombreMediaMix || "",options: { fontSize: tamanoLetra, bold:false }},
-             {text: Intl.NumberFormat().format(parseFloat(filterValue)), options: { fontSize: tamanoLetra, bold:false }},            
-             {text: Intl.NumberFormat().format(entregable*1000).toString(), options: { fontSize: tamanoLetra, bold:false }},
-             {text: Intl.NumberFormat().format(entregable).toString(), options: { fontSize: tamanoLetra, bold:false }},            
+             {text:arr?.nombreMediaMix || "",options: { fontSize: tamanoLetra, bold:false }}, //COLUMNA NOMBRE
+             {text: Intl.NumberFormat().format(parseFloat(filterValue)), options: { fontSize: tamanoLetra, bold:false }},   //COLUMNA CPMs
+             {text: Intl.NumberFormat().format(parseFloat(filterValue) *1000).toString(), options: { fontSize: tamanoLetra, bold:false }}, //COLUMNA ENTREGABLE
+             {text: "$ " + Intl.NumberFormat().format(tarifa).toString(), options: { fontSize: tamanoLetra, bold:false }},  //COLUMNA INVERSION
            ]
          );
        }
     
      }
-    console.log("totalMediaMix",totalMediaMix)
+    //console.log("totalMediaMix",totalMediaMix)
     let subTotal:HTMLSpanElement = <HTMLSpanElement>document.getElementById('sub-total-total');
     let descuento:HTMLSpanElement = <HTMLSpanElement>document.getElementById('descuento-total');
     let selectDescuento:HTMLSelectElement =<HTMLSelectElement>document.getElementById("descuentosOPSA");
@@ -990,27 +1098,29 @@ console.log("Total clusters ",totalClusters);
     
     //let arr = dataMediaMix.find(element => element.idMediaMix == id)
 
-    let entregable = this.calcularTarifa(value, arr?.tarifa || 1);
+    let tarifa = this.calcularTarifa(value, arr?.tarifa || 1);
 
     this.slide = this.pres.addSlide();
     
     //AGREGO FONDO
-    this.slide.background = { path: "../../../../../assets/fondos/fondoNegro.png" };
+    this.slide.background = { path: this.getFondoPptx() };
+
+    let colorFuente = this.getColorFuente();
 
     //AGREGO EL TITULO DEL MEDIA MIX
-    this.slide.addText(arr?.nombreMediaMix, { x: 1.4, y: 0.4, w: 10, h:1.2, color: "ffffff", fontSize: 36, fontFace:"Calibri" });
+    this.slide.addText(arr?.nombreMediaMix, { x: 1.4, y: 0.4, w: 10, h:1.2, color: colorFuente, fontSize: 36, fontFace:"Calibri" });
 
      //AGREGO LOGO MEDIA MIX GIF "../../../../../assets/preview/display-normal.gif"
      this.slide.addImage({ path: arr.preview , x: 0.5, y: 1.7, w:3.25, h:4 });
 
      //AGREGO EL PARRAFO
-    this.slide.addText(dataMediaMix.find(element => element.idMediaMix == id)?.descripcion, { x: 4.1, y: 2, w: 6.5, h:1.5, color: "ffffff", fontSize: 18, fontFace:"Calibri" });
+    this.slide.addText(dataMediaMix.find(element => element.idMediaMix == id)?.descripcion, { x: 4.1, y: 2, w: 6.5, h:1.5, color: colorFuente, fontSize: 18, fontFace:"Calibri" });
 
     //AGREGO INVERSION
-    this.slide.addText(`Inversión en Dólares: $${Intl.NumberFormat().format(value)} `, { x: 4.1, y: 4.1, w: 6.5, h:0.2, color: "ffffff", fontSize: 24, fontFace:"Calibri" });
+    this.slide.addText(`Inversión en Dólares: $${Intl.NumberFormat().format(tarifa)} `, { x: 4.1, y: 4.1, w: 6.5, h:0.2, color: colorFuente, fontSize: 24, fontFace:"Calibri" });
 
     //AGREGO ENTREGABLE
-    this.slide.addText(`Entregable en Impresiones: ${Intl.NumberFormat().format(entregable*1000)} ${dataMediaMix.find(element => element.idMediaMix == id)?.entregable}`, { x: 4.1, y: 4.5, w: 7.5, h:0.5, color: "ffffff", fontSize: 24, fontFace:"Calibri" });
+    this.slide.addText(`Entregable en Impresiones: ${Intl.NumberFormat().format(value*1000)} ${dataMediaMix.find(element => element.idMediaMix == id)?.entregable}`, { x: 4.1, y: 4.5, w: 7.5, h:0.5, color: colorFuente, fontSize: 24, fontFace:"Calibri" });
     
   }
 
@@ -1021,12 +1131,14 @@ console.log("Total clusters ",totalClusters);
     this.slide = this.pres.addSlide();
     
     //AGREGO FONDO
-    this.slide.background = { path: "../../../../../assets/fondos/fondoNegro.png" };
+    this.slide.background = { path: this.getFondoPptx() };
+
+    let colorFuente = this.getColorFuente();
 
     //AGREGO EL TITULO DEL MEDIA MIX
-    this.slide.addText("CLUSTERS AFINES QUE SE IMPACTARÁN", { x: 1.4, y: 0.4, w: 10, h:1.2, color: "ffffff", fontSize: 36, fontFace:"Calibri" });
+    this.slide.addText("CLUSTERS AFINES QUE SE IMPACTARÁN", { x: 1.4, y: 0.4, w: 10, h:1.2, color: colorFuente, fontSize: 36, fontFace:"Calibri" });
 
-    this.slide.addText("Clusters de audiencia a impactar", { x: 0.5, y: 1.5, w: 5, h:0.5, color: "ffffff", fontSize: 24, fontFace:"Calibri" });
+    this.slide.addText("Clusters de audiencia a impactar", { x: 0.5, y: 1.5, w: 5, h:0.5, color: colorFuente, fontSize: 24, fontFace:"Calibri" });
 
     
 
@@ -1039,13 +1151,13 @@ console.log("Total clusters ",totalClusters);
         this.values.push(element.audiencia.numeroUsuarios);
         totalUsuarios += element.audiencia.numeroUsuarios;
 
-        this.slide.addText(`${element.nombreCluster.toLowerCase()} (${element.tipoCluster.toLowerCase()}) ${Intl.NumberFormat().format(element.audiencia.numeroUsuarios)} usuarios`, { x: 0.5, y: position, w: 8, h:0.2, color: "ffffff", fontSize: 18, fontFace:"Calibri" });
+        this.slide.addText(`${element.nombreCluster.toLowerCase()} (${element.tipoCluster.toLowerCase()}) ${Intl.NumberFormat().format(element.audiencia.numeroUsuarios)} usuarios`, { x: 0.5, y: position, w: 8, h:0.2, color: colorFuente, fontSize: 18, fontFace:"Calibri" });
 
         position+=0.3;
     });
     
 
-    this.slide.addText(`Total audiencia target a impactar: ${Intl.NumberFormat().format(totalUsuarios)} usuarios`, { x: 0.5, y: 6.4, w: 10, h:0.5, color: "ffffff", fontSize: 24, fontFace:"Calibri" });
+    this.slide.addText(`Total audiencia target a impactar: ${Intl.NumberFormat().format(totalUsuarios)} usuarios`, { x: 0.5, y: 6.4, w: 10, h:0.5, color: colorFuente, fontSize: 24, fontFace:"Calibri" });
        //GRAFICO DE RESUMEN CLUSTERS
           
        let resumenClusters = [
@@ -1060,7 +1172,7 @@ console.log("Total clusters ",totalClusters);
         y: 1.5,
         w: 4.5,
         h: 4.5,
-        chartArea: { fill: { color: "FFFFFF" } },
+        chartArea: { fill: { color: colorFuente } },
         holeSize: 70,
         showLabel: false,
         showValue: false,
@@ -1068,17 +1180,17 @@ console.log("Total clusters ",totalClusters);
         showLegend: true,
         legendPos: "b",
         //
-        chartColors: "FFFFFF",
+        chartColors: colorFuente,
         //dataBorder: { pt: "2", color: "FFFFFF" },
-        dataLabelColor: "FFFFFF",
+        dataLabelColor: colorFuente,
         dataLabelFontSize: 12,
         //
         showTitle: false,
         title: "Project Status",
-        titleColor: "FFFFFF",
+        titleColor: colorFuente,
         titleFontFace: "Calibri",
         titleFontSize: 24,
-        legendColor:"FFFFFF"
+        legendColor:colorFuente
         
       });
       this.codesClusterSelected = [];
@@ -1088,10 +1200,12 @@ console.log("Total clusters ",totalClusters);
     this.messageNotificacion = "CREANDO SLIDER TABLA RESUMEN........";
     this.slide = this.pres.addSlide();
     //AGREGO FONDO
-    this.slide.background = { path: "../../../../../assets/fondos/fondoNegro.png" };
+    this.slide.background = { path: this.getFondoPptx() };
+
+    let colorFuente =  this.getColorFuente();
 
     //AGREGO TITULO
-    this.slide.addText(`RESUMEN INVERSION`, { x: 1.5, y: 0.2, w:9, h:0.5, color: "ffffff", fontSize: 36, fontFace:"Barlow SemiBold" });
+    this.slide.addText(`RESUMEN INVERSION`, { x: 0.4, y: 0.2, w:9, h:0.5, color: colorFuente, fontSize: 36, fontFace:"Barlow SemiBold" });
     
    
     this.slide.addTable(tablaResumenMediaMix, {
@@ -1099,8 +1213,8 @@ console.log("Total clusters ",totalClusters);
       y:0.8,
       rowH: [altoFila],
       colW: [6, 1,2, 2],
-      fill: { color: "F7F7F7" },
-      color: "000000",
+      // fill: { color: "F7F7F7" },
+      color: this.getColorFuente(),
       fontSize: 14,
       valign: "center",   
       border: { pt: "1", color: "BBCCDD" },
@@ -1114,7 +1228,7 @@ console.log("Total clusters ",totalClusters);
     let fileName = "PROPUESTA MIDRI.pptx";
     this.pres.writeFile({ fileName: 'PROPUESTA MIDRI.pptx'})
         .then(() => {
-          console.log(`created file: ${fileName}`);
+          //console.log(`created file: ${fileName}`);
           this.messageNotificacion = "DESCARGANDO PRESENTACIÓN...";
 
           setTimeout(() => {
@@ -1124,8 +1238,6 @@ console.log("Total clusters ",totalClusters);
           }, 3000);
           
         })
-        
-    
     
   }
   @ViewChild('stepper',{read:MatStepper}) stepper!:MatStepper;
