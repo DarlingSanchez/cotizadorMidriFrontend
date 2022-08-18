@@ -19,7 +19,7 @@
                     <mat-button-toggle [value]="data.id" id="marca-{{data.id}}" *ngFor="let data of marcas" [checked]="data.active" [ngClass]="{'marca-visible marca':data.id==0,'marca-no-visible marca':data.id>0}">
                         <img class="img-logo" src="{{data.logo}}" alt="{{data.nombreMarca}}">
                     </mat-button-toggle>
-                    <button (click)="verMarcas()" class="button btn-tercero ver-marcas">{{captionButtonVerMarcas}}</button>
+                    <button (click)="verMarcas()" class="button btn-tercero ver-marcas" disabled>{{captionButtonVerMarcas}} (no disponible)</button>
                 </mat-button-toggle-group>
 
             </div>
